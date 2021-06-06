@@ -88,7 +88,7 @@ int main(void)
   MX_GPIO_Init();
   MX_CAN_Init();
   /* USER CODE BEGIN 2 */
-
+  CAN_Send();
   /* USER CODE END 2 */
 
   /* Infinite loop */
