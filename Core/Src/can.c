@@ -132,7 +132,7 @@ uint8_t CAN_Send(uint32_t id, uint8_t *pdata, uint8_t len)
 	pHeader.ExtId = 0x00;                          // Расширенную команду указывать нет смысла
 	pHeader.IDE = CAN_ID_STD;                 // Формат кадра
 	pHeader.RTR = CAN_RTR_DATA;                    // Тип сообщения
-	pHeader.DLC = sizeof(pdata);
+	pHeader.DLC = len;
 	pHeader.TransmitGlobalTime = DISABLE;			//Do not capture time
 
 	sFilterConfig.FilterFIFOAssignment = CAN_FILTER_FIFO0;
