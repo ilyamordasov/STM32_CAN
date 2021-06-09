@@ -110,6 +110,7 @@ int main(void)
     /* USER CODE BEGIN 3 */
 	  HAL_IWDG_Refresh(&hiwdg);
 	  HAL_Delay(100);
+	  printf("Rand: %lu\r\n", getRandInt(500, 4000));
   }
   /* USER CODE END 3 */
 }

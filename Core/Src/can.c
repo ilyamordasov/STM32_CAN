@@ -22,7 +22,7 @@
 
 /* USER CODE BEGIN 0 */
 #include <stdio.h>
-//#include "retarget.h"
+#include <stdlib.h>
 
 CAN_TxHeaderTypeDef pHeader; //declare a specific header for message transmittions
 CAN_RxHeaderTypeDef pRxHeader; //declare header for message reception
@@ -121,6 +121,11 @@ void HAL_CAN_MspDeInit(CAN_HandleTypeDef* canHandle)
 }
 
 /* USER CODE BEGIN 1 */
+uint32_t getRandInt(uint32_t min, uint32_t max)
+{
+	return rand() % ((max + 1) - min) + min;
+}
+
 uint8_t CAN_Send(uint32_t id, uint8_t *pdata, uint8_t len)
 {
 	printf("Transmit ID_0x%03lX: ", id);
