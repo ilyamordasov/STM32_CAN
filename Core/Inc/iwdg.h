@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * File Name          : CAN.h
+  * File Name          : IWDG.h
   * Description        : This file provides code for the configuration
-  *                      of the CAN instances.
+  *                      of the IWDG instances.
   ******************************************************************************
   * @attention
   *
@@ -17,8 +17,8 @@
   ******************************************************************************
   */
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __can_H
-#define __can_H
+#ifndef __iwdg_H
+#define __iwdg_H
 #ifdef __cplusplus
  extern "C" {
 #endif
@@ -30,23 +30,22 @@
 
 /* USER CODE END Includes */
 
-extern CAN_HandleTypeDef hcan;
+extern IWDG_HandleTypeDef hiwdg;
 
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
 
-void MX_CAN_Init(void);
+void MX_IWDG_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-uint8_t CAN_Send(uint32_t id, uint8_t *pdata, uint8_t len);
-uint8_t CAN_Receive(uint32_t id, uint8_t *pdata, uint32_t len);
+
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus
 }
 #endif
-#endif /*__ can_H */
+#endif /*__ iwdg_H */
 
 /**
   * @}

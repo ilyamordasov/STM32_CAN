@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * File Name          : CAN.h
+  * File Name          : IWDG.c
   * Description        : This file provides code for the configuration
-  *                      of the CAN instances.
+  *                      of the IWDG instances.
   ******************************************************************************
   * @attention
   *
@@ -16,44 +16,32 @@
   *
   ******************************************************************************
   */
-/* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __can_H
-#define __can_H
-#ifdef __cplusplus
- extern "C" {
-#endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "main.h"
+#include "iwdg.h"
 
-/* USER CODE BEGIN Includes */
+/* USER CODE BEGIN 0 */
 
-/* USER CODE END Includes */
+/* USER CODE END 0 */
 
-extern CAN_HandleTypeDef hcan;
+IWDG_HandleTypeDef hiwdg;
 
-/* USER CODE BEGIN Private defines */
+/* IWDG init function */
+void MX_IWDG_Init(void)
+{
 
-/* USER CODE END Private defines */
+  hiwdg.Instance = IWDG;
+  hiwdg.Init.Prescaler = IWDG_PRESCALER_4;
+  hiwdg.Init.Reload = 4095;
+  if (HAL_IWDG_Init(&hiwdg) != HAL_OK)
+  {
+    Error_Handler();
+  }
 
-void MX_CAN_Init(void);
-
-/* USER CODE BEGIN Prototypes */
-uint8_t CAN_Send(uint32_t id, uint8_t *pdata, uint8_t len);
-uint8_t CAN_Receive(uint32_t id, uint8_t *pdata, uint32_t len);
-/* USER CODE END Prototypes */
-
-#ifdef __cplusplus
 }
-#endif
-#endif /*__ can_H */
 
-/**
-  * @}
-  */
+/* USER CODE BEGIN 1 */
 
-/**
-  * @}
-  */
+/* USER CODE END 1 */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

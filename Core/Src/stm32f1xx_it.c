@@ -23,6 +23,7 @@
 #include "stm32f1xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "can.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -62,7 +63,7 @@ extern CAN_HandleTypeDef hcan;
 extern CAN_TxHeaderTypeDef pHeader;
 extern CAN_RxHeaderTypeDef pRxHeader;
 extern uint32_t TxMailbox;
-extern uint8_t a,r;
+extern uint8_t a, r;
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -212,6 +213,7 @@ void USB_LP_CAN1_RX0_IRQHandler(void)
   HAL_CAN_IRQHandler(&hcan);
   /* USER CODE BEGIN USB_LP_CAN1_RX0_IRQn 1 */
   HAL_CAN_GetRxMessage(&hcan, CAN_RX_FIFO0, &pRxHeader, &r);
+  CAN_Receive(pRxHeader.StdId, &r, pRxHeader.DLC);//pRxHeader.DLC);
   /* USER CODE END USB_LP_CAN1_RX0_IRQn 1 */
 }
 

@@ -21,10 +21,13 @@
 #include "can.h"
 
 /* USER CODE BEGIN 0 */
+#include <stdio.h>
+//#include "retarget.h"
+
 CAN_TxHeaderTypeDef pHeader; //declare a specific header for message transmittions
 CAN_RxHeaderTypeDef pRxHeader; //declare header for message reception
 uint32_t TxMailbox;
-uint8_t a,r; //declare byte to be transmitted //declare a receive byte
+uint8_t a, r; //declare byte to be transmitted //declare a receive byte
 CAN_FilterTypeDef sFilterConfig; //declare CAN filter structure
 HAL_StatusTypeDef   HAL_RetVal; //CAN return value
 /* USER CODE END 0 */
@@ -66,20 +69,22 @@ void HAL_CAN_MspInit(CAN_HandleTypeDef* canHandle)
     /* CAN1 clock enable */
     __HAL_RCC_CAN1_CLK_ENABLE();
 
-    __HAL_RCC_GPIOA_CLK_ENABLE();
+    __HAL_RCC_GPIOB_CLK_ENABLE();
     /**CAN GPIO Configuration
-    PA11     ------> CAN_RX
-    PA12     ------> CAN_TX
+    PB8     ------> CAN_RX
+    PB9     ------> CAN_TX
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_11;
+    GPIO_InitStruct.Pin = GPIO_PIN_8;
     GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-    GPIO_InitStruct.Pin = GPIO_PIN_12;
+    GPIO_InitStruct.Pin = GPIO_PIN_9;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+    __HAL_AFIO_REMAP_CAN1_2();
 
     /* CAN1 interrupt Init */
     HAL_NVIC_SetPriority(USB_LP_CAN1_RX0_IRQn, 0, 0);
@@ -102,10 +107,10 @@ void HAL_CAN_MspDeInit(CAN_HandleTypeDef* canHandle)
     __HAL_RCC_CAN1_CLK_DISABLE();
 
     /**CAN GPIO Configuration
-    PA11     ------> CAN_RX
-    PA12     ------> CAN_TX
+    PB8     ------> CAN_RX
+    PB9     ------> CAN_TX
     */
-    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_11|GPIO_PIN_12);
+    HAL_GPIO_DeInit(GPIOB, GPIO_PIN_8|GPIO_PIN_9);
 
     /* CAN1 interrupt Deinit */
     HAL_NVIC_DisableIRQ(USB_LP_CAN1_RX0_IRQn);
@@ -116,19 +121,32 @@ void HAL_CAN_MspDeInit(CAN_HandleTypeDef* canHandle)
 }
 
 /* USER CODE BEGIN 1 */
-uint8_t CAN_Send(void)
+uint8_t CAN_Send(uint32_t id, uint8_t *pdata, uint8_t len)
 {
-	pHeader.StdId = 8;             // Команда шины
+	printf("Transmit ID_0x%03lX: ", id);
+	for (uint8_t i=0; i<len; ++i){
+		printf("0x%02X ", pdata[i]);
+	}
+	printf("\r\n");
+	pHeader.StdId = id;//8;             // Команда шины
 	pHeader.ExtId = 0x00;                          // Расширенную команду указывать нет смысла
 	pHeader.IDE = CAN_ID_STD;                 // Формат кадра
 	pHeader.RTR = CAN_RTR_DATA;                    // Тип сообщения
-	pHeader.DLC = 3;                               // Длина блока данных 3 - передадим три байта
+	pHeader.DLC = sizeof(pdata);
 	pHeader.TransmitGlobalTime = DISABLE;			//Do not capture time
 
-	uint8_t *pdata;
-	pdata[0] = 0x00;                        // Байт данных №1
-	pdata[1] = 0x01;                        // Байт данных №2
-	pdata[2] = 0x02;                        // Байт данных №3
+	sFilterConfig.FilterFIFOAssignment = CAN_FILTER_FIFO0;
+	sFilterConfig.FilterIdHigh = id<<5;
+	sFilterConfig.FilterIdLow = 0;
+	sFilterConfig.FilterMaskIdHigh = 0;
+	sFilterConfig.FilterMaskIdLow = 0;
+	sFilterConfig.FilterScale = CAN_FILTERSCALE_32BIT;
+	sFilterConfig.FilterActivation = CAN_FILTER_ENABLE;
+
+	HAL_CAN_ConfigFilter(&hcan, &sFilterConfig);
+
+	HAL_CAN_Start(&hcan);
+	HAL_CAN_ActivateNotification(&hcan, CAN_IT_RX_FIFO0_MSG_PENDING);
 
 	uint16_t i = 0;
 	/*Ask if CAN has a free mailbox*/
@@ -142,9 +160,21 @@ uint8_t CAN_Send(void)
 
 	/*Send frame*/
 	HAL_RetVal = HAL_CAN_AddTxMessage(&hcan, &pHeader, pdata, &TxMailbox); //Send a frame of data
-	//printf("TxMailbox %d\r\n",TxMailbox);
+
+	//waiting for message to leave
+	//while(HAL_CAN_IsTxMessagePending(&hcan, TxMailbox));
+
 	if(HAL_RetVal != HAL_OK)
 		return 1;
+	return 0;
+}
+
+uint8_t CAN_Receive(uint32_t id, uint8_t *pdata, uint32_t len) {
+	printf("Received ID_0x%03lX: ", id);
+	for (uint8_t i=0; i<len; ++i) {
+		printf("0x%02X ", pdata[i]);
+	}
+	printf("\r\n\r\n");
 	return 0;
 }
 /* USER CODE END 1 */
