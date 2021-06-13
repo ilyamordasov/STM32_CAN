@@ -23,6 +23,7 @@
 /* USER CODE BEGIN 0 */
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 CAN_TxHeaderTypeDef pHeader; //declare a specific header for message transmittions
 CAN_RxHeaderTypeDef pRxHeader; //declare header for message reception
@@ -126,10 +127,20 @@ uint32_t getRandInt(uint32_t min, uint32_t max)
 	return rand() % ((max + 1) - min) + min;
 }
 
+uint8_t *numTobytes(uint32_t num) {
+	uint8_t nb_bytes = (uint8_t)floor(log(num) / log(256)) + 1;
+	uint8_t data[nb_bytes+1];
+	data[0] = nb_bytes;
+	for (uint8_t i = 1; i < nb_bytes+1; ++i){
+		data[i] = (num >> (nb_bytes - i - 1) * 8) & 0xFF;
+	}
+	return data;
+}
+
 uint8_t CAN_Send(uint32_t id, uint8_t *pdata, uint8_t len)
 {
 	printf("Transmit ID_0x%03lX: ", id);
-	for (uint8_t i=0; i<len; ++i){
+	for (uint8_t i = 0; i < len; ++i){
 		printf("0x%02X ", pdata[i]);
 	}
 	printf("\r\n");
@@ -176,7 +187,7 @@ uint8_t CAN_Send(uint32_t id, uint8_t *pdata, uint8_t len)
 
 uint8_t CAN_Receive(uint32_t id, uint8_t *pdata, uint32_t len) {
 	printf("Received ID_0x%03lX: ", id);
-	for (uint8_t i=0; i<len; ++i) {
+	for (uint8_t i = 0; i < len; ++i) {
 		printf("0x%02X ", pdata[i]);
 	}
 	printf("\r\n\r\n");

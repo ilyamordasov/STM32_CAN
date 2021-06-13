@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/systems-icons">
+        <file>battery.svg</file>
+        <file>checkengine.svg</file>
+        <file>light.svg</file>
+        <file>tpms.svg</file>
+    </qresource>
+</RCC>

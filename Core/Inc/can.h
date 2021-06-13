@@ -41,7 +41,9 @@ void MX_CAN_Init(void);
 /* USER CODE BEGIN Prototypes */
 uint8_t CAN_Send(uint32_t id, uint8_t *pdata, uint8_t len);
 uint8_t CAN_Receive(uint32_t id, uint8_t *pdata, uint32_t len);
+
 uint32_t getRandInt(uint32_t min, uint32_t max);
+uint8_t *numTobytes(uint32_t num);
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

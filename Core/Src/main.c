@@ -54,7 +54,7 @@
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-
+extern void initialise_monitor_handles(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -69,7 +69,7 @@ void SystemClock_Config(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
+	//initialise_monitor_handles();
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -110,7 +110,12 @@ int main(void)
     /* USER CODE BEGIN 3 */
 	  HAL_IWDG_Refresh(&hiwdg);
 	  HAL_Delay(100);
-	  printf("Rand: %lu\r\n", getRandInt(500, 4000));
+//	  printf("Rand: %lu\r\n", getRandInt(500, 4000));
+//	  uint8_t *p = numTobytes(500);
+//	  for (uint8_t i=1; i<*(p + 0); ++i) {
+//		  printf("0x%02X ", *(p + i));
+//	  }
+//	  printf("\r\n");
   }
   /* USER CODE END 3 */
 }
