@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.15.1, 2021-06-14T00:26:55. -->
+<!-- Written by QtCreator 4.14.84, 2021-06-14T01:32:48. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -251,6 +251,7 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">/media/im/121Gb/stm32/projects/CAN/QT/icons/checkengine.svg</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./media/im/121Gb/stm32/projects/CAN/QT/icons/checkengine.svg</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/media/im/121Gb/stm32/projects/CAN/QT/icons/checkengine.svg</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{d9c5542b-9739-4baf-8832-11a36a911aee}</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">/media/im/121Gb/stm32/projects/CAN/QT/icons/checkengine.svg</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
@@ -400,6 +401,7 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">/media/im/121Gb/stm32/projects/CAN/QT/icons/light.svg</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./media/im/121Gb/stm32/projects/CAN/QT/icons/light.svg</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/media/im/121Gb/stm32/projects/CAN/QT/icons/light.svg</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{d9c5542b-9739-4baf-8832-11a36a911aee}</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">/media/im/121Gb/stm32/projects/CAN/QT/icons/light.svg</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
@@ -474,6 +476,7 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">/media/im/121Gb/stm32/projects/CAN/QT/icons/tpms.svg</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./media/im/121Gb/stm32/projects/CAN/QT/icons/tpms.svg</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/media/im/121Gb/stm32/projects/CAN/QT/icons/tpms.svg</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{d9c5542b-9739-4baf-8832-11a36a911aee}</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">/media/im/121Gb/stm32/projects/CAN/QT/icons/tpms.svg</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>

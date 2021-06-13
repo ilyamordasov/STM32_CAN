@@ -110,7 +110,7 @@ int main(void)
     /* USER CODE BEGIN 3 */
 	  HAL_IWDG_Refresh(&hiwdg);
 	  HAL_Delay(100);
-//	  printf("Rand: %lu\r\n", getRandInt(500, 4000));
+	  printf("$S<%lu\r\n", getRandInt(0, 250)); // simulate speed
 //	  uint8_t *p = numTobytes(500);
 //	  for (uint8_t i=1; i<*(p + 0); ++i) {
 //		  printf("0x%02X ", *(p + i));

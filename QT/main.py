@@ -13,7 +13,6 @@ class Dashboard(QWidget):
     def __init__(self):
         super(Dashboard, self).__init__()
         self.load_ui()
-        self.count = 0
 
         self.setCheck(False)
         self.setTPMS(False)
@@ -32,9 +31,7 @@ class Dashboard(QWidget):
         ui_file.close()
 
     def setSpeed(self, num):
-        print("tick")
-        self.ui.speed.setText(str(self.count))
-        self.count += 1
+        self.ui.speed.setText(str(num))
 
     def setCheck(self, value = True):
         self.ui.checkengine.hide() if value is not True else self.ui.checkengine.show()
@@ -45,9 +42,11 @@ class Dashboard(QWidget):
     def setLights(self, value = True):
         self.ui.light.hide() if value is not True else self.ui.light.show()
 
-def serialRead(ser):
+def serialRead(ser, widget):
     while True:
-        print(ser.readline().decode('utf-8'))
+        data = ser.readline().decode('utf-8')
+        if '$S<' in data:
+            widget.setSpeed(data[3:])
 
 
 if __name__ == "__main__":
@@ -60,7 +59,7 @@ if __name__ == "__main__":
 
     ser = serial.Serial(ports[0], 115200)
 
-    x = threading.Thread(target=serialRead, args=(ser,))
+    x = threading.Thread(target=serialRead, args=(ser,widget))
     logging.info("Main: before running thread")
     x.start()
 
