@@ -9,6 +9,9 @@ from PySide6.QtUiTools import QUiLoader
 
 import serial, serial.tools.list_ports, threading, logging
 
+# bluetooth low energy scan
+from gattlib import DiscoveryService
+
 class Dashboard(QWidget):
     def __init__(self):
         super(Dashboard, self).__init__()
@@ -48,19 +51,27 @@ def serialRead(ser, widget):
         if '$S<' in data:
             widget.setSpeed(data[3:])
 
+def ble_discover():
+    service = DiscoveryService("hci0")
+    devices = service.discover(2)
+
+    for address, name in devices.items():
+        print("name: {}, address: {}".format(name, address))
+
 
 if __name__ == "__main__":
     app = QApplication([])
     widget = Dashboard()
     widget.show()
 
-    ports = [p.device for p in serial.tools.list_ports.comports() if 'USB' in p.description]
-    print(ports)
+#    ports = [p.device for p in serial.tools.list_ports.comports() if 'USB' in p.description]
+#    print(ports)
 
-    ser = serial.Serial(ports[0], 115200)
+#    ser = serial.Serial(ports[0], 115200)
 
-    x = threading.Thread(target=serialRead, args=(ser,widget))
+#    x = threading.Thread(target=serialRead, args=(ser,widget))
+    x = threading.Thread(target=ble_discover)
     logging.info("Main: before running thread")
     x.start()
 
-    sys.exit(app.exec())
+    sys.exit(app.exec_())

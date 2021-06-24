@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtDesignStudio 2.1.0, 2021-06-23T12:33:57. -->
+<!-- Written by QtDesignStudio 2.1.0, 2021-06-13T21:53:52. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
-  <value type="QByteArray">{d02b66aa-01ac-4c74-b94a-8fa1149ac6ea}</value>
+  <value type="QByteArray">{c944f536-5557-4b61-b017-cbe90d0a1df2}</value>
  </data>
  <data>
   <variable>ProjectExplorer.Project.ActiveTarget</variable>
@@ -89,17 +89,16 @@
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">/media/im/121Gb/stm32/projects/CAN/QT/main.py</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./media/im/121Gb/stm32/projects/CAN/QT/main.py</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/media/im/121Gb/stm32/projects/CAN/QT/main.py</value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{08d9c90c-eee0-43e2-94c3-ce9372e53113}</value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">/media/im/121Gb/stm32/projects/CAN/QT/main.py</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">/media/im/121Gb/stm32/projects/CAN/QT/Dashboard/main.py</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./media/im/121Gb/stm32/projects/CAN/QT/Dashboard/main.py</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/media/im/121Gb/stm32/projects/CAN/QT/Dashboard/main.py</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{33d1d348-315c-4a5e-b78c-c35f53b06511}</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Script">/media/im/121Gb/stm32/projects/CAN/QT/Dashboard/main.py</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="bool" key="RunConfiguration.UseTerminal">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">/media/im/121Gb/stm32/projects/CAN/QT</value>
+    <value type="QString" key="RunConfiguration.WorkingDirectory.default">/media/im/121Gb/stm32/projects/CAN/QT/Dashboard</value>
    </valuemap>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.1">
     <value type="bool" key="Analyzer.QmlProfiler.AggregateTraces">false</value>
@@ -110,15 +109,15 @@
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">/media/im/121Gb/stm32/projects/CAN/QT/icons/tpms.svg</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./media/im/121Gb/stm32/projects/CAN/QT/icons/tpms.svg</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/media/im/121Gb/stm32/projects/CAN/QT/icons/tpms.svg</value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">/media/im/121Gb/stm32/projects/CAN/QT/icons/tpms.svg</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">/media/im/121Gb/stm32/projects/CAN/QT/Dashboard/icons/light.svg</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./media/im/121Gb/stm32/projects/CAN/QT/Dashboard/icons/light.svg</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/media/im/121Gb/stm32/projects/CAN/QT/Dashboard/icons/light.svg</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Script">/media/im/121Gb/stm32/projects/CAN/QT/Dashboard/icons/light.svg</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">/media/im/121Gb/stm32/projects/CAN/QT/icons</value>
+    <value type="QString" key="RunConfiguration.WorkingDirectory.default">/media/im/121Gb/stm32/projects/CAN/QT/Dashboard/icons</value>
    </valuemap>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.2">
     <value type="bool" key="Analyzer.QmlProfiler.AggregateTraces">false</value>
@@ -129,15 +128,15 @@
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">/media/im/121Gb/stm32/projects/CAN/QT/icons/light.svg</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./media/im/121Gb/stm32/projects/CAN/QT/icons/light.svg</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/media/im/121Gb/stm32/projects/CAN/QT/icons/light.svg</value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">/media/im/121Gb/stm32/projects/CAN/QT/icons/light.svg</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">/media/im/121Gb/stm32/projects/CAN/QT/Dashboard/icons/tpms.svg</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./media/im/121Gb/stm32/projects/CAN/QT/Dashboard/icons/tpms.svg</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/media/im/121Gb/stm32/projects/CAN/QT/Dashboard/icons/tpms.svg</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Script">/media/im/121Gb/stm32/projects/CAN/QT/Dashboard/icons/tpms.svg</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">/media/im/121Gb/stm32/projects/CAN/QT/icons</value>
+    <value type="QString" key="RunConfiguration.WorkingDirectory.default">/media/im/121Gb/stm32/projects/CAN/QT/Dashboard/icons</value>
    </valuemap>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.3">
     <value type="bool" key="Analyzer.QmlProfiler.AggregateTraces">false</value>
@@ -148,15 +147,15 @@
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">/media/im/121Gb/stm32/projects/CAN/QT/icons/battery.svg</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./media/im/121Gb/stm32/projects/CAN/QT/icons/battery.svg</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/media/im/121Gb/stm32/projects/CAN/QT/icons/battery.svg</value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">/media/im/121Gb/stm32/projects/CAN/QT/icons/battery.svg</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">/media/im/121Gb/stm32/projects/CAN/QT/Dashboard/icons/battery.svg</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./media/im/121Gb/stm32/projects/CAN/QT/Dashboard/icons/battery.svg</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/media/im/121Gb/stm32/projects/CAN/QT/Dashboard/icons/battery.svg</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Script">/media/im/121Gb/stm32/projects/CAN/QT/Dashboard/icons/battery.svg</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">/media/im/121Gb/stm32/projects/CAN/QT/icons</value>
+    <value type="QString" key="RunConfiguration.WorkingDirectory.default">/media/im/121Gb/stm32/projects/CAN/QT/Dashboard/icons</value>
    </valuemap>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.4">
     <value type="bool" key="Analyzer.QmlProfiler.AggregateTraces">false</value>
@@ -167,15 +166,15 @@
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">/media/im/121Gb/stm32/projects/CAN/QT/icons/checkengine.svg</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./media/im/121Gb/stm32/projects/CAN/QT/icons/checkengine.svg</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/media/im/121Gb/stm32/projects/CAN/QT/icons/checkengine.svg</value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">/media/im/121Gb/stm32/projects/CAN/QT/icons/checkengine.svg</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">/media/im/121Gb/stm32/projects/CAN/QT/Dashboard/icons/checkengine.svg</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./media/im/121Gb/stm32/projects/CAN/QT/Dashboard/icons/checkengine.svg</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/media/im/121Gb/stm32/projects/CAN/QT/Dashboard/icons/checkengine.svg</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Script">/media/im/121Gb/stm32/projects/CAN/QT/Dashboard/icons/checkengine.svg</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">/media/im/121Gb/stm32/projects/CAN/QT/icons</value>
+    <value type="QString" key="RunConfiguration.WorkingDirectory.default">/media/im/121Gb/stm32/projects/CAN/QT/Dashboard/icons</value>
    </valuemap>
    <value type="int" key="ProjectExplorer.Target.RunConfigurationCount">5</value>
   </valuemap>
