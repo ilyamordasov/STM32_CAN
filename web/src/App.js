@@ -45,11 +45,19 @@ class App extends React.Component {
    */
   handleCharacteristicValueChanged = (event) => {
     var string = new TextDecoder("utf-8").decode(event.target.value)
+    
+    var buffer   = new Int32Array(event.target.value);
+    var buf = "["
+    for (var i of buffer) {
+      buf += (i + ", ")
+    }
+    buf += "]"
+    
     if (string.indexOf("AT") !== -1) {
       this.cmd = string.replace(/\r\n/gi, "")
     }
     else {
-      this.log(this.cmd, string.replace(/\r/gi, "").replace(/\n/gi, "").replace(/>/gi, ""))
+      this.log(this.cmd, string.replace(/\r/gi, "").replace(/\n/gi, "").replace(/>/gi, ""), buf)
       this.cmd = null
     }
   }
