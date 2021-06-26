@@ -163,14 +163,20 @@ class App extends React.Component {
 
       const writeService = await service.getCharacteristic(0xfff2)
       this.log("writeService", writeService)
-      var AT_cmds = ["ATRV", "ATREADVER", "ATD", "ATZ", /*"ATE0",*/ "ATL0", "ATH1", "ATS0", "ATSP0", "0100", "ATDPN", "010C", "010D", "0105"]
+      var AT_cmds = ["ATRV", "ATREADVER", "ATD", "ATZ", /*"ATE0",*/ "ATL0", "ATH1", "ATS0", "ATSP0", "0100", "ATDPN"]
       
       for (var i of AT_cmds) {
         await writeService.writeValue(this.stringToASCII(i + "\r\n"))
         await this.sleep(2000)
       }
 
-      setTimeout(async () => { await this.disconnect() }, 5000);
+      setInterval(async () => { 
+        var data = ["010C", "010D", "0105"]
+        for (var i of data) {
+          await writeService.writeValue(this.stringToASCII(i + "\r\n"))
+          await this.sleep(1000)
+        }
+      }, 5000);
       
     } catch(error) {
       this.log(`There was an error: ${error}`);
