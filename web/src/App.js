@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button, Container, Row, Col } from 'react-bootstrap';
+import moment from 'moment'
 
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -8,6 +9,7 @@ class App extends React.Component {
 
   constructor(props) {
     super(props)
+    moment.locale('ru');
     this.device = null
     this.supportsBluetooth = false
     this.isDisconnected = true
@@ -30,6 +32,12 @@ class App extends React.Component {
     alert(`The device ${event.target} is disconnected`);
     this.isDisconnected =true
   }
+
+  scrollToBottom = () => {
+    if(this.textLog){
+        this.textLog.scrollTop = this.textLog.scrollHeight;
+    }
+  };
 
   /**
    * Update the value shown on the web page when a notification is
@@ -54,8 +62,10 @@ class App extends React.Component {
 
   log = (...value) => {
     for (var i of value) {
+      var ts = "[ " + moment().format('HH:mm:ss') + " ]\t"
       console.log(i)
-      this.setState({console : this.state.console + value.toString()+"\r\n"})
+      this.setState({console : this.state.console + ts + value.toString()+"\r\n"})
+      this.scrollToBottom()
     }
   }
 
@@ -196,7 +206,7 @@ class App extends React.Component {
             <h1>Get Device Battery Info Over Bluetooth</h1><br/>
               {this.supportsBluetooth && !this.isDisconnected &&
                     <>
-                    <textarea style={{width: "90vw", height: "70vh"}}value={this.state.console}/>
+                    <textarea style={{width: "90vw", height: "70vh"}} value={this.state.console} ref={textLog => this.textLog = textLog}/>
                     <>
                       <Button variant="danger" size="lg" block onClick={this.disconnect}>Disconnect</Button>
                     </>
