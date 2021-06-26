@@ -1,5 +1,8 @@
 import React from 'react';
+import { Button, Container, Row, Col } from 'react-bootstrap';
+
 import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 class App extends React.Component {
 
@@ -11,7 +14,8 @@ class App extends React.Component {
     this.batteryLevel = null
     this.cmd = null
     this.state = {
-      console: ""
+      console: "",
+      interval:null
     }
 
     if (navigator.bluetooth) {
@@ -43,6 +47,7 @@ class App extends React.Component {
   }
 
   disconnect = async (event) => {
+    clearInterval(this.state.interval)
     this.device.gatt.disconnect()
   }
 
@@ -150,7 +155,7 @@ class App extends React.Component {
       // Get the battery service from the Bluetooth device
       const service = await server.getPrimaryService(0xfff0);
       // const service = await server.getPrimaryService('device_information');
-      this.log("service", service)
+      this.log("service", JSON.stringify(service))
 
       // Get the battery level characteristic from the Bluetooth device
       const readService = await service.getCharacteristic(0xfff1);
@@ -162,7 +167,6 @@ class App extends React.Component {
       readService.addEventListener('characteristicvaluechanged', this.handleCharacteristicValueChanged);
 
       const writeService = await service.getCharacteristic(0xfff2)
-      this.log("writeService", writeService)
       var AT_cmds = ["ATRV", "ATREADVER", "ATD", "ATZ", /*"ATE0",*/ "ATL0", "ATH1", "ATS0", "ATSP0", "0100", "ATDPN"]
       
       for (var i of AT_cmds) {
@@ -170,13 +174,13 @@ class App extends React.Component {
         await this.sleep(2000)
       }
 
-      setInterval(async () => { 
+      this.setState({interval: setInterval(async () => { 
         var data = ["010C", "010D", "0105"]
         for (var i of data) {
           await writeService.writeValue(this.stringToASCII(i + "\r\n"))
           await this.sleep(1000)
         }
-      }, 5000);
+      }, 5000)});
       
     } catch(error) {
       this.log(`There was an error: ${error}`);
@@ -185,24 +189,29 @@ class App extends React.Component {
   
     render(){
       return (
-        <div className="App">
-          <h1>Get Device Battery Info Over Bluetooth</h1>
-          {this.supportsBluetooth && !this.isDisconnected &&
+        <Container>
+          <Row>
+            <Col lg>
+            <h1>Get Device Battery Info Over Bluetooth</h1><br/>
+              {this.supportsBluetooth && !this.isDisconnected &&
+                    <>
+                    <textarea style={{width: "90vw", height: "70vh"}}value={this.state.console}/>
+                    <>
+                      <Button variant="danger" size="lg" block onClick={this.disconnect}>Disconnect</Button>
+                    </>
+                    </>
+              }
+              {this.supportsBluetooth && this.isDisconnected &&
                 <>
-                <button onClick={this.disconnect}>Disconnect</button>
-                <br/>
-                <textarea style={{width: "100vw", height: "100vh"}}value={this.state.console}/>
+                  <Button variant="primary" size="lg" block onClick={this.connectToDeviceAndSubscribeToUpdates}>Connect to a Bluetooth device</Button>
                 </>
-          }
-          {this.supportsBluetooth && this.isDisconnected &&
-            <>
-              <button onClick={this.connectToDeviceAndSubscribeToUpdates}>Connect to a Bluetooth device</button>
-            </>
-          }
-          {!this.supportsBluetooth &&
-            <p>This browser doesn't support the Web Bluetooth API</p>
-          }
-        </div>
+              }
+              {!this.supportsBluetooth &&
+                <p>This browser doesn't support the Web Bluetooth API</p>
+              }
+            </Col>
+          </Row>
+        </Container>
       );
     }
 };
