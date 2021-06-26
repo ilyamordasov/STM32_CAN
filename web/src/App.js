@@ -49,6 +49,7 @@ class App extends React.Component {
   disconnect = async (event) => {
     clearInterval(this.state.interval)
     this.device.gatt.disconnect()
+    this.isDisconnected = true
   }
 
   log = (...value) => {
@@ -155,7 +156,7 @@ class App extends React.Component {
       // Get the battery service from the Bluetooth device
       const service = await server.getPrimaryService(0xfff0);
       // const service = await server.getPrimaryService('device_information');
-      this.log("service", JSON.stringify(service))
+      this.log("service", service)
 
       // Get the battery level characteristic from the Bluetooth device
       const readService = await service.getCharacteristic(0xfff1);
