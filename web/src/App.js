@@ -79,6 +79,7 @@ class App extends React.Component {
     clearInterval(this.state.interval)
     this.device.gatt.disconnect()
     this.isDisconnected = true
+    this.setState({status: 0, device_name: ''})
   }
 
   log = (...value) => {
