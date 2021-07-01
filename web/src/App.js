@@ -187,8 +187,8 @@ class App extends React.Component {
 
       // Add an event listener to detect when a device disconnects
       this.device.addEventListener('gattserverdisconnected', this.onDisconnected);
-      this.log('device', device)
-      this.setState({device_name: device.name})
+      this.log('device', this.device)
+      this.setState({device_name: this.device.name})
       // Try to connect to the remote GATT Server running on the Bluetooth device
       const server = await this.device.gatt.connect();
       this.log('server', server)
