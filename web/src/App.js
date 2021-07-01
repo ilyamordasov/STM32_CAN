@@ -29,7 +29,8 @@ class App extends React.Component {
       interval:null,
       status: -1,
       theme: 'light',
-      modal: false
+      modal: false,
+      device_name: ''
     }
 
     if (navigator.bluetooth) {
@@ -186,10 +187,11 @@ class App extends React.Component {
 
       // Add an event listener to detect when a device disconnects
       this.device.addEventListener('gattserverdisconnected', this.onDisconnected);
-
+      this.log('device', device)
+      this.setState({device_name: device.name})
       // Try to connect to the remote GATT Server running on the Bluetooth device
       const server = await this.device.gatt.connect();
-
+      this.log('server', server)
       // Get the battery service from the Bluetooth device
       const service = await server.getPrimaryService(0xfff0);
       // const service = await server.getPrimaryService('device_information');
@@ -246,7 +248,7 @@ class App extends React.Component {
                 this.supportsBluetooth
                 ? <>
                     <Row>
-                      <Col md={10} xs={10}>{this.state.status === 0 ? <><BLEOn className="svg"/>Disconneted</> : <><BLEConnected className="svg"/> Connected</>}</Col>
+                      <Col md={10} xs={10}>{this.state.status === 0 ? <><BLEOn className="svg"/>Disconneted</> : <><BLEConnected className="svg"/>{this.state.device_name}</>}</Col>
                       <Col md={2} xs={2} style={{textAlign: 'right'}}><Button variant="link" onClick={(e) => this.setState({modal: !this.state.modal})}>Logs</Button></Col>
                     </Row>
                     <Row>
