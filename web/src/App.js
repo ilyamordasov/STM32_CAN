@@ -20,7 +20,7 @@ class App extends React.Component {
     super(props)
     moment.locale('ru');
     this.device = null
-    this.supportsBluetooth = true
+    this.supportsBluetooth = false
     this.isDisconnected = true
     this.batteryLevel = null
     this.cmd = null
@@ -43,7 +43,6 @@ class App extends React.Component {
    */
   onDisconnected = (event) => {
     alert(`The device ${event.target} is disconnected`);
-    this.isDisconnected =true
   }
 
   scrollToBottom = () => {
