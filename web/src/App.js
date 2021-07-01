@@ -1,9 +1,18 @@
 import React from 'react';
-import { Button, Container, Row, Col } from 'react-bootstrap';
+import { Button, Container, Row, Col, Modal } from 'react-bootstrap';
 import moment from 'moment'
 
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+
+import {ReactComponent as BLEOn} from './ble-on.svg';
+import {ReactComponent as BLEOff} from './ble-off.svg';
+import {ReactComponent as BLEConnected} from './ble-connected.svg';
+
+import { ThemeProvider } from 'styled-components';
+import { lightTheme, darkTheme } from './styles/theme';
+import { GlobalStyles } from './styles/global';
+
 
 class App extends React.Component {
 
@@ -11,17 +20,21 @@ class App extends React.Component {
     super(props)
     moment.locale('ru');
     this.device = null
-    this.supportsBluetooth = false
+    this.supportsBluetooth = true
     this.isDisconnected = true
     this.batteryLevel = null
     this.cmd = null
     this.state = {
       console: "",
-      interval:null
+      interval:null,
+      status: -1,
+      theme: 'light',
+      modal: false
     }
 
     if (navigator.bluetooth) {
       this.supportsBluetooth = true
+      this.setState({status: 1})
     }
   }
 
@@ -78,7 +91,6 @@ class App extends React.Component {
   }
 
   /* Utils */
-
   padHex = (value) => {
     return ('00' + value.toString(16).toUpperCase()).slice(-2);
   }
@@ -154,6 +166,14 @@ class App extends React.Component {
 
   handleChange(event) {    this.log(event.target.value)  }
 
+  fillData = () => {
+    var a = [];
+    for (var i=0; i<20; i++) {
+      a.push(<Col md={2} xs={4}><div key={i} style={{height: 100, backgroundColor: '#000'}}>i</div></Col>)
+    }
+    return a
+  }
+
   connectToDeviceAndSubscribeToUpdates = async () => {
     try {
       // Search for Bluetooth devices that advertise a battery service
@@ -205,32 +225,65 @@ class App extends React.Component {
       this.log(`There was an error: ${error}`);
     }
   }
+
+  componentDidMount() {
+    if (typeof window !== 'undefined') {
+      this.setState({theme: window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"})
+    }
+  }
+
+  handleClose = () => this.setState({modal: false});
+  handleShow = () => this.setState({modal: true});
   
     render(){
       return (
-        <Container>
-          <Row>
-            <Col lg>
-            <h1>Get Device Battery Info Over Bluetooth</h1><br/>
-              {this.supportsBluetooth && !this.isDisconnected &&
-                    <>
-                    <textarea style={{width: "90vw", height: "70vh"}} value={this.state.console} ref={textLog => this.textLog = textLog}/>
-                    <>
-                      <Button variant="danger" size="lg" block onClick={this.disconnect}>Disconnect</Button>
-                    </>
-                    </>
-              }
-              {this.supportsBluetooth && this.isDisconnected &&
+        <ThemeProvider theme={this.state.theme === 'light' ? lightTheme : darkTheme}>
+          <GlobalStyles />
+          <Container style={{height: '100vh', padding: 25}}>
+            <Row style={{height: '80vh', margin: 'auto'}}>
+              <Col lg>
                 <>
-                  <Button variant="primary" size="lg" block onClick={this.connectToDeviceAndSubscribeToUpdates}>Connect to a Bluetooth device</Button>
+                {
+                this.supportsBluetooth
+                ? <>
+                    <Row>
+                      <Col md={10} xs={10}>{this.state.status === 0 ? <><BLEOn className="svg"/>Disconneted</> : <><BLEConnected className="svg"/> Connected</>}</Col>
+                      <Col md={2} xs={2} style={{textAlign: 'right'}}><Button variant="link" onClick={(e) => this.setState({modal: !this.state.modal})}>Logs</Button></Col>
+                    </Row>
+                    <Row>
+                      <Col>
+                      </Col>
+                    </Row>
+                  </>
+                : <div style={{textAlign: 'center'}}><BLEOff className='bleoff' style={{width: window.screen.width-160 +'px', height: window.screen.width-160 +'px'}}/><p>This browser doesn't support the Web Bluetooth API</p></div>
+                }
                 </>
-              }
-              {!this.supportsBluetooth &&
-                <p>This browser doesn't support the Web Bluetooth API</p>
-              }
-            </Col>
-          </Row>
-        </Container>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <>
+                { 
+                  this.supportsBluetooth
+                  ? (this.isDisconnected ? <Button variant="success" style={{width: 'inherit'}} size="lg" onClick={this.connectToDeviceAndSubscribeToUpdates} block>Connect to a Bluetooth device</Button> : <Button variant="danger" style={{width: 'inherit'}} size="lg" onClick={this.disconnect} block>Disconnect</Button>)
+                  : null
+                }
+                </>
+              </Col>
+            </Row>
+          </Container>
+          <Modal show={this.state.modal} onHide={this.handleClose}>
+            <Modal.Header closeButton>
+              <Modal.Title>Logs</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <textarea value={this.state.console} ref={textLog => this.textLog = textLog}/>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="primary" style={{width: 'inherit'}} size="lg" onClick={this.handleClose} block>Save</Button>
+            </Modal.Footer>
+          </Modal>
+        </ThemeProvider>
       );
     }
 };
