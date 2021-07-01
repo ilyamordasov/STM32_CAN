@@ -34,7 +34,7 @@ class App extends React.Component {
 
     if (navigator.bluetooth) {
       this.supportsBluetooth = true
-      this.setState({status: 1})
+      this.setState({status: 0})
     }
   }
 
