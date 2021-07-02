@@ -186,8 +186,6 @@ class App extends React.Component {
   }
 
   connectToDeviceAndSubscribeToUpdates = async () => {
-    this.isDisconnected = false
-
     try {
       // Search for Bluetooth devices that advertise a battery service
       this.device = await navigator.bluetooth
@@ -203,6 +201,7 @@ class App extends React.Component {
       const server = await this.device.gatt.connect();
       this.log('server', server)
       this.setState({status: 1, device_name: this.device.name})
+      this.isDisconnected = false
       // Get the battery service from the Bluetooth device
       const service = await server.getPrimaryService(0xfff0);
       // const service = await server.getPrimaryService('device_information');
