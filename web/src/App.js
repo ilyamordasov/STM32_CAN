@@ -2,6 +2,9 @@ import React from 'react';
 import { Button, Container, Row, Col, Modal, Form } from 'react-bootstrap';
 import moment from 'moment'
 
+import { OBDReader } from './ble/obd';
+import Emitter from './emitter';
+
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -45,6 +48,8 @@ class App extends React.Component {
     this.isDisconnected = true
     this.cmd = null
     this.autoscroll = true
+
+    this.obd = new OBDReader()
   }
 
   /**
@@ -84,30 +89,20 @@ class App extends React.Component {
   }
 
   disconnect = async (event) => {
-    clearInterval(this.state.interval)
-    this.device.gatt.disconnect()
-    this.isDisconnected = true
-    this.setState({status: 0, device_name: ''})
+    this.obd.disconnect()
   }
 
-  log = (...value) => {
-    for (var i of value) {
-      var ts = "[ " + moment().format('HH:mm:ss') + " ]\t"
-      console.log(i)
-      this.setState({console : this.state.console + ts + value.toString()+"\r\n"})
-      this.scrollToBottom()
-    }
+  log = (data) => {
+    var ts = "[ " + moment().format('HH:mm:ss') + " ]\t"
+    console.log(data)
+    this.setState({console : this.state.console + ts + JSON.stringify(data) + "\r\n"})
+    this.scrollToBottom()
   }
 
   /* Utils */
   padHex = (value) => {
     return ('00' + value.toString(16).toUpperCase()).slice(-2);
   }
-
-  // getUsbVendorName = (value) => {
-  //   // Check out page source to see what valueToUsbVendorName object is.
-  //   return value + (value in valueToUsbVendorName ? ' (' + valueToUsbVendorName[value] + ')' : '');
-  // }
 
   getDeviceInformation = async (BluetoothUUID, characteristics) => {
     const decoder = new TextDecoder('utf-8');
@@ -177,14 +172,6 @@ class App extends React.Component {
 
   handleChange = (event) => this.log(event.target.value)
 
-  fillData = () => {
-    var a = [];
-    for (var i=0; i<20; i++) {
-      a.push(<Col md={2} xs={4}><div key={i} style={{height: 100, backgroundColor: '#000'}}>i</div></Col>)
-    }
-    return a
-  }
-
   connectToDeviceAndSubscribeToUpdates = async () => {
     try {
       // Search for Bluetooth devices that advertise a battery service
@@ -241,11 +228,42 @@ class App extends React.Component {
     if (typeof window !== 'undefined') {
       this.setState({theme: window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"})
     }
-    if (navigator.bluetooth) {
-      this.supportsBluetooth = true
-      this.setState({status: 0})
-    }
+
+    Emitter.on('available', (value) => {
+      if (value) {
+        this.supportsBluetooth = true
+        this.setState({status: 0})
+      }
+    })
+
+    Emitter.on('dataReceived', (data) => {
+      this.log(data);
+    });
+  
+    Emitter.on('connected', (name) => {
+        this.isDisconnected = false
+        this.setState({status: 1, device_name: name})
+
+        this.obd.addPoller("vss")
+        this.obd.addPoller("rpm")
+        this.obd.addPoller("temp")
+        this.obd.addPoller("load_pct")
+        this.obd.addPoller("map")
+        this.obd.addPoller("frp")
     
+        this.obd.startPolling(1500)
+    });
+
+    Emitter.on('disconnected', () => {
+      this.isDisconnected = true
+      this.setState({status: 0, device_name: ''})
+    });
+  
+    Emitter.on('error', (data) => {
+      this.log('Error: ' + data)
+    });
+
+    this.obd.init()
   }
 
   handleClose = () => this.setState({modal: false});
@@ -286,7 +304,7 @@ class App extends React.Component {
               <>
               { 
                 this.supportsBluetooth
-                ? (this.isDisconnected ? <Button variant="success" style={{width: 'inherit'}} size="lg" onClick={this.connectToDeviceAndSubscribeToUpdates} block>Connect to a Bluetooth device</Button> : <Button variant="danger" style={{width: 'inherit'}} size="lg" onClick={this.disconnect} block>Disconnect</Button>)
+                ? (this.isDisconnected ? <Button variant="success" style={{width: 'inherit'}} size="lg" onClick={this.obd.connect} block>Connect to a Bluetooth device</Button> : <Button variant="danger" style={{width: 'inherit'}} size="lg" onClick={this.obd.disconnect} block>Disconnect</Button>)
                 : null
               }
               </>
