@@ -28,11 +28,11 @@ class App extends React.Component {
       modal: false,
       device_name: '',
       metrics: [
-        {name: "rpm", value: 0, m: ''},
-        {name: "speed", value: 0, m: 'km/h'},
-        {name: "coolant", value: 0, m: '°'},
-        {name: "load", value: 0, m: '%'},
-        {name: "errors", value: 0, m: ''},
+        {name: "rpm", value: 10000, m: ''},
+        {name: "speed", value: 10000, m: 'km/h'},
+        {name: "coolant", value: 10000, m: '°'},
+        {name: "load", value: 10000, m: '%'},
+        {name: "errors", value: 10000, m: ''},
       ]
     }
 

@@ -72,7 +72,7 @@ export const GlobalStyles = createGlobalStyle`
     margin-right: 16px;
     margin-bottom: 16px;
     font-weight: 700;
-    font-size: 32px;
+    font-size: 24px;
   }
 
   .item span {
