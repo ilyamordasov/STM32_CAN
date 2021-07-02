@@ -54,11 +54,6 @@ class App extends React.Component {
     this.log(`The device ${event.target.name} is disconnected`);
   }
 
-  onConnected = (event) => {
-    this.log(`The device ${event.target.name} is connected`)
-    this.setState({status: 1, device_name: event.target.name})
-  }
-
   scrollToBottom = () => {
     if(this.textLog && this.autoscroll){
         this.textLog.scrollTop = this.textLog.scrollHeight;
@@ -191,6 +186,8 @@ class App extends React.Component {
   }
 
   connectToDeviceAndSubscribeToUpdates = async () => {
+    this.isDisconnected = false
+
     try {
       // Search for Bluetooth devices that advertise a battery service
       this.device = await navigator.bluetooth
@@ -199,15 +196,13 @@ class App extends React.Component {
           optionalServices: ['device_information']
         });
 
-      this.isDisconnected = false
-
       // Add an event listener to detect when a device disconnects
       this.device.addEventListener('gattserverdisconnected', this.onDisconnected);
-      this.device.addEventListener('gattserverdconnected', this.onConnected);
       this.log('device', this.device)
       // Try to connect to the remote GATT Server running on the Bluetooth device
       const server = await this.device.gatt.connect();
       this.log('server', server)
+      this.setState({status: 1, device_name: this.device.name})
       // Get the battery service from the Bluetooth device
       const service = await server.getPrimaryService(0xfff0);
       // const service = await server.getPrimaryService('device_information');
