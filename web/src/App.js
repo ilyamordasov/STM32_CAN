@@ -28,11 +28,11 @@ class App extends React.Component {
       modal: false,
       device_name: '',
       metrics: [
-        {name: "rpm", value: 0},
-        {name: "speed", value: 0+" km/h"},
-        {name: "coolant", value: 0+"°"},
-        {name: "load", value: 0+" %"},
-        {name: "errors", value: 0},
+        {name: "rpm", value: 0, m: ''},
+        {name: "speed", value: 0, m: 'km/h'},
+        {name: "coolant", value: 0, m: '°'},
+        {name: "load", value: 0, m: '%'},
+        {name: "errors", value: 0, m: ''},
       ]
     }
 
@@ -267,7 +267,7 @@ class App extends React.Component {
                     <Col style={{position: 'relative'}}><Row>
                     {
                       this.state.metrics.map((x, index) => {
-                        return <Col xs={4} md={4}><div key={index}className="item"><span>{x.name}</span><br/>{x.value}</div></Col>
+                        return <Col xs={4} md={4}><div key={index}className="item"><span>{x.name}</span><br/>{x.value} <sup>{x.m}</sup></div></Col>
                       })
                     }
                     </Row></Col>

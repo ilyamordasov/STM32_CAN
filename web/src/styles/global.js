@@ -80,5 +80,10 @@ export const GlobalStyles = createGlobalStyle`
     text-transform: uppercase;
     font-weight: 400;
   }
+
+  .item sup {
+    font-size: 14px;
+    font-weight: 400;
+  }
 }
 `;
