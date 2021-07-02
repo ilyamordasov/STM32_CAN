@@ -33,7 +33,7 @@ class App extends React.Component {
         {name: "speed", value: 100, m: 'km/h'},
         {name: "coolant", value: 100, m: '°'},
         {name: "load", value: 100, m: '%'},
-        {name: "errors", value: 1000, m: ''},
+        {name: "dtc errors", value: 1000, m: ''},
         {name: "egr errors", value: 1000, m: ''},
         {name: "distance", value: 1000, m: 'km'},
         {name: "pressure", value: 1000, m: 'bar'},
@@ -41,7 +41,7 @@ class App extends React.Component {
     }
 
     this.device = null
-    this.supportsBluetooth = true
+    this.supportsBluetooth = false
     this.isDisconnected = true
     this.cmd = null
     this.autoscroll = true
@@ -52,6 +52,11 @@ class App extends React.Component {
    */
   onDisconnected = (event) => {
     this.log(`The device ${event.target.name} is disconnected`);
+  }
+
+  onConnected = (event) => {
+    this.log(`The device ${event.target.name} is connected`)
+    this.setState({status: 1, device_name: event.target.name})
   }
 
   scrollToBottom = () => {
@@ -198,9 +203,8 @@ class App extends React.Component {
 
       // Add an event listener to detect when a device disconnects
       this.device.addEventListener('gattserverdisconnected', this.onDisconnected);
+      this.device.addEventListener('gattserverdconnected', this.onConnected);
       this.log('device', this.device)
-      this.setState({device_name: this.device.name})
-      this.log('device_name', this.state.device_name)
       // Try to connect to the remote GATT Server running on the Bluetooth device
       const server = await this.device.gatt.connect();
       this.log('server', server)
@@ -247,6 +251,7 @@ class App extends React.Component {
       this.supportsBluetooth = true
       this.setState({status: 0})
     }
+    
   }
 
   handleClose = () => this.setState({modal: false});
