@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Container, Row, Col, Modal } from 'react-bootstrap';
+import { Button, Container, Row, Col, Modal, Form } from 'react-bootstrap';
 import moment from 'moment'
 
 import './App.css';
@@ -19,35 +19,39 @@ class App extends React.Component {
   constructor(props) {
     super(props)
     moment.locale('ru');
-    this.device = null
-    this.supportsBluetooth = false
-    this.isDisconnected = true
-    this.batteryLevel = null
-    this.cmd = null
+
     this.state = {
       console: "",
       interval:null,
       status: -1,
       theme: 'light',
       modal: false,
-      device_name: ''
+      device_name: '',
+      metrics: [
+        {name: "rpm", value: 0},
+        {name: "speed", value: 0},
+        {name: "coolant", value: 0},
+        {name: "load", value: 0},
+        {name: "errors", value: 0},
+      ]
     }
 
-    if (navigator.bluetooth) {
-      this.supportsBluetooth = true
-      this.setState({status: 0})
-    }
+    this.device = null
+    this.supportsBluetooth = true
+    this.isDisconnected = true
+    this.cmd = null
+    this.autoscroll = true
   }
 
   /**
    * Let the user know when their device has been disconnected.
    */
   onDisconnected = (event) => {
-    alert(`The device ${event.target} is disconnected`);
+    this.log(`The device ${event.target.name} is disconnected`);
   }
 
   scrollToBottom = () => {
-    if(this.textLog){
+    if(this.textLog && this.autoscroll){
         this.textLog.scrollTop = this.textLog.scrollHeight;
     }
   };
@@ -165,7 +169,9 @@ class App extends React.Component {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-  handleChange(event) {    this.log(event.target.value)  }
+  cb_obChange = (e) => this.autoscroll = !this.autoscroll
+
+  handleChange = (event) => this.log(event.target.value)
 
   fillData = () => {
     var a = [];
@@ -190,6 +196,7 @@ class App extends React.Component {
       this.device.addEventListener('gattserverdisconnected', this.onDisconnected);
       this.log('device', this.device)
       this.setState({device_name: this.device.name})
+      this.log('device_name', this.state.device_name)
       // Try to connect to the remote GATT Server running on the Bluetooth device
       const server = await this.device.gatt.connect();
       this.log('server', server)
@@ -232,62 +239,72 @@ class App extends React.Component {
     if (typeof window !== 'undefined') {
       this.setState({theme: window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"})
     }
+    if (navigator.bluetooth) {
+      this.supportsBluetooth = true
+      this.setState({status: 0})
+    }
   }
 
   handleClose = () => this.setState({modal: false});
   handleShow = () => this.setState({modal: true});
   
-    render(){
-      return (
-        <ThemeProvider theme={this.state.theme === 'light' ? lightTheme : darkTheme}>
-          <GlobalStyles />
-          <Container style={{height: '100vh', padding: 25}}>
-            <Row style={{height: '80vh', margin: 'auto'}}>
-              <Col lg>
-                <>
-                {
+  render(){
+    return (
+      <ThemeProvider theme={this.state.theme === 'light' ? lightTheme : darkTheme}>
+        <GlobalStyles />
+        <Container style={{height: '100vh', padding: 25}}>
+          <Row style={{height: '80vh', margin: 'auto'}}>
+            <Col lg>
+              
+              {
+              this.supportsBluetooth
+              ? <>
+                  <Row>
+                    <Col md={10} xs={10}>{this.state.status === 0 ? <><BLEOn className="svg"/> Disconneted</> : <><BLEConnected className="svg"/> {this.state.device_name}</>}</Col>
+                    <Col md={2} xs={2} style={{textAlign: 'right'}}><Button variant="link" onClick={(e) => this.setState({modal: !this.state.modal})}>Logs</Button></Col>
+                  </Row>
+                  <Row>
+                    <Col style={{position: 'relative'}}><Row>
+                    {
+                      this.state.metrics.map((x, index) => {
+                        return <Col xs={4} md={4}><div key={index}className="item"><span>{x.name}</span><br/>{x.value}</div></Col>
+                      })
+                    }
+                    </Row></Col>
+                  </Row>
+                </>
+              : <div style={{textAlign: 'center'}}><BLEOff className='bleoff' style={{width: window.screen.width-160 +'px', height: window.screen.width-160 +'px'}}/><p>This browser doesn't support the Web Bluetooth API</p></div>
+              }
+              
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <>
+              { 
                 this.supportsBluetooth
-                ? <>
-                    <Row>
-                      <Col md={10} xs={10}>{this.state.status === 0 ? <><BLEOn className="svg"/>Disconneted</> : <><BLEConnected className="svg"/>{this.state.device_name}</>}</Col>
-                      <Col md={2} xs={2} style={{textAlign: 'right'}}><Button variant="link" onClick={(e) => this.setState({modal: !this.state.modal})}>Logs</Button></Col>
-                    </Row>
-                    <Row>
-                      <Col>
-                      </Col>
-                    </Row>
-                  </>
-                : <div style={{textAlign: 'center'}}><BLEOff className='bleoff' style={{width: window.screen.width-160 +'px', height: window.screen.width-160 +'px'}}/><p>This browser doesn't support the Web Bluetooth API</p></div>
-                }
-                </>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <>
-                { 
-                  this.supportsBluetooth
-                  ? (this.isDisconnected ? <Button variant="success" style={{width: 'inherit'}} size="lg" onClick={this.connectToDeviceAndSubscribeToUpdates} block>Connect to a Bluetooth device</Button> : <Button variant="danger" style={{width: 'inherit'}} size="lg" onClick={this.disconnect} block>Disconnect</Button>)
-                  : null
-                }
-                </>
-              </Col>
-            </Row>
-          </Container>
-          <Modal show={this.state.modal} onHide={this.handleClose}>
-            <Modal.Header closeButton>
-              <Modal.Title>Logs</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <textarea value={this.state.console} ref={textLog => this.textLog = textLog}/>
-            </Modal.Body>
-            <Modal.Footer>
-              <Button variant="primary" style={{width: 'inherit'}} size="lg" onClick={this.handleClose} block>Save</Button>
-            </Modal.Footer>
-          </Modal>
-        </ThemeProvider>
-      );
-    }
+                ? (this.isDisconnected ? <Button variant="success" style={{width: 'inherit'}} size="lg" onClick={this.connectToDeviceAndSubscribeToUpdates} block>Connect to a Bluetooth device</Button> : <Button variant="danger" style={{width: 'inherit'}} size="lg" onClick={this.disconnect} block>Disconnect</Button>)
+                : null
+              }
+              </>
+            </Col>
+          </Row>
+        </Container>
+        <Modal show={this.state.modal} onHide={this.handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Logs</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <textarea value={this.state.console} ref={textLog => this.textLog = textLog}/>
+            <Form.Check type="checkbox" id="autoscroll" label="Autoscroll" onChange={this.cb_obChange} checked={this.autoscroll}/>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="primary" style={{width: 'inherit'}} size="lg" onClick={this.handleClose} block>Save</Button>
+          </Modal.Footer>
+        </Modal>
+      </ThemeProvider>
+    );
+  }
 };
 
 export default App;

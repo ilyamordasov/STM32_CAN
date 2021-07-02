@@ -55,13 +55,31 @@ export const GlobalStyles = createGlobalStyle`
 
   textarea {
     width: 90vw;
-    height: 70vh;
+    height: 55vh;
     border: none;
     width: -moz-available;
+    width: -webkit-fill-available;
   }
 
   .btn-link {
     text-decoration: none;
+  }
+
+  .item {
+    height: 8vw;
+    border: 1px solid rgba(33,33,33,0.2);
+    border-radius: 8px;
+    padding: 0px 24px 0px 24px;
+    margin-right: 16px;
+    margin-bottom: 16px;
+    font-weight: 700;
+    font-size: 32px;
+  }
+
+  .item span {
+    font-size: 12px;
+    text-transform: uppercase;
+    font-weight: 400;
   }
 }
 `;
