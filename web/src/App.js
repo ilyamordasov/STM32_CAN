@@ -37,7 +37,7 @@ class App extends React.Component {
     }
 
     this.device = null
-    this.supportsBluetooth = false
+    this.supportsBluetooth = true
     this.isDisconnected = true
     this.cmd = null
     this.autoscroll = true
@@ -259,7 +259,7 @@ class App extends React.Component {
               {
               this.supportsBluetooth
               ? <>
-                  <Row>
+                  <Row style={{marginBottom: 80}}>
                     <Col md={10} xs={10}>{this.state.status === 0 ? <><BLEOn className="svg"/> Disconneted</> : <><BLEConnected className="svg"/> {this.state.device_name}</>}</Col>
                     <Col md={2} xs={2} style={{textAlign: 'right'}}><Button variant="link" onClick={(e) => this.setState({modal: !this.state.modal})}>Logs</Button></Col>
                   </Row>
