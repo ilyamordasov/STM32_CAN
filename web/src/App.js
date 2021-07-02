@@ -250,6 +250,8 @@ class App extends React.Component {
         this.isDisconnected = false
         this.setState({status: 1, device_name: name})
 
+        this.obd.requestValueByName("vin")
+
         this.obd.addPoller("vss")
         this.obd.addPoller("rpm")
         this.obd.addPoller("temp")
