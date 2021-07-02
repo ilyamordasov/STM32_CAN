@@ -66,23 +66,21 @@ export const GlobalStyles = createGlobalStyle`
   }
 
   .item {
-    border: 1px solid rgba(33,33,33,0.2);
     border-radius: 8px;
-    padding: 0px 24px 0px 24px;
     margin-right: 16px;
     margin-bottom: 16px;
     font-weight: 700;
-    font-size: 24px;
+    font-size: 20px;
   }
 
   .item span {
-    font-size: 12px;
+    font-size: 10px;
     text-transform: uppercase;
     font-weight: 400;
   }
 
   .item sup {
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 400;
   }
 }
