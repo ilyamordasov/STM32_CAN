@@ -30,16 +30,17 @@ class App extends React.Component {
       theme: 'light',
       modal: false,
       device_name: '',
+
       metrics: [
-        {name: "battery", value: 12.3, m: 'v'},
-        {name: "rpm", value: 10000, m: ''},
-        {name: "speed", value: 100, m: 'km/h'},
-        {name: "coolant", value: 100, m: '°'},
-        {name: "load", value: 100, m: '%'},
-        {name: "dtc errors", value: 1000, m: ''},
-        {name: "egr errors", value: 1000, m: ''},
-        {name: "distance", value: 1000, m: 'km'},
-        {name: "pressure", value: 1000, m: 'bar'},
+        {name: "battery", cmd: "", value: 0, m: 'v'},
+        {name: "rpm", cmd: "rpm", value: 0, m: ''},
+        {name: "speed", cmd: "vss", value: 0, m: 'km/h'},
+        {name: "coolant", cmd: "temp", value: 0, m: '°'},
+        {name: "load", cmd: "load_pct", value: 0, m: '%'},
+        // {name: "dtc errors", cmd: "", value: 0, m: ''},
+        {name: "egr errors", cmd: "egr_err", value: 0, m: '%'},
+        {name: "distance", cmd: "mil_dist", value: 0, m: 'km'},
+        {name: "pressure", cmd: "map", value: 0, m: 'kPa'},
       ]
     }
 
@@ -238,6 +239,11 @@ class App extends React.Component {
 
     Emitter.on('dataReceived', (data) => {
       this.log(data);
+      const newState = Object.assign([], this.state.metrics)
+      if (data.name !== undefined) {
+        newState.forEach((item) => { if (item.cmd === data) {item.value = data.value} })
+        this.setState({metrics: newState})
+      }
     });
   
     Emitter.on('connected', (name) => {
@@ -249,7 +255,8 @@ class App extends React.Component {
         this.obd.addPoller("temp")
         this.obd.addPoller("load_pct")
         this.obd.addPoller("map")
-        this.obd.addPoller("frp")
+        this.obd.addPoller("mil_dist")
+        this.obd.addPoller("egr_err")
     
         this.obd.startPolling(1500)
     });
