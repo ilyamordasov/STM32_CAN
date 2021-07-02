@@ -68,7 +68,7 @@ export const GlobalStyles = createGlobalStyle`
   .item {
     border-radius: 8px;
     margin-right: 16px;
-    margin-bottom: 16px;
+    margin-bottom: 32px;
     font-weight: 700;
     font-size: 20px;
   }
