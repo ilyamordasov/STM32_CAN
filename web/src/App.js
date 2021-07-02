@@ -32,7 +32,7 @@ class App extends React.Component {
       device_name: '',
 
       metrics: [
-        {name: "battery", cmd: "", value: 0, m: 'v'},
+        {name: "battery", cmd: "vpwr", value: 0, m: 'v'},
         {name: "rpm", cmd: "rpm", value: 0, m: ''},
         {name: "speed", cmd: "vss", value: 0, m: 'km/h'},
         {name: "coolant", cmd: "temp", value: 0, m: '°'},
@@ -257,6 +257,7 @@ class App extends React.Component {
         this.obd.addPoller("map")
         this.obd.addPoller("mil_dist")
         this.obd.addPoller("egr_err")
+        this.obd.addPoller("vpwr")
     
         this.obd.startPolling(1500)
     });
