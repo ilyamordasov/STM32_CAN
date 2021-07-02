@@ -29,15 +29,15 @@ class App extends React.Component {
       device_name: '',
       metrics: [
         {name: "rpm", value: 0},
-        {name: "speed", value: 0},
-        {name: "coolant", value: 0},
-        {name: "load", value: 0},
+        {name: "speed", value: 0+" km/h"},
+        {name: "coolant", value: 0+"°"},
+        {name: "load", value: 0+" %"},
         {name: "errors", value: 0},
       ]
     }
 
     this.device = null
-    this.supportsBluetooth = true
+    this.supportsBluetooth = false
     this.isDisconnected = true
     this.cmd = null
     this.autoscroll = true
