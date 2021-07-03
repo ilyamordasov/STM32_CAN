@@ -44,7 +44,7 @@ class App extends React.Component {
     }
 
     this.device = null
-    this.supportsBluetooth = true
+    this.supportsBluetooth = false
     this.isDisconnected = true
     this.cmd = null
     this.autoscroll = true
@@ -132,8 +132,8 @@ class App extends React.Component {
       this.log('Error: ' + data)
     });
 
-    //this.obd.init()
-    this.obd.test()
+    this.obd.init()
+    //this.obd.test()
   }
 
   handleClose = () => this.setState({modal: false});
