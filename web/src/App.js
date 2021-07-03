@@ -240,10 +240,10 @@ class App extends React.Component {
     Emitter.on('dataReceived', (data) => {
       this.log(data);
       const newState = Object.assign([], this.state.metrics)
-      if (data.name !== undefined) {
+     // if (data.name !== undefined) {
         newState.forEach((item) => { if (item.cmd === data) {item.value = data.value} })
         this.setState({metrics: newState})
-      }
+    //  }
     });
   
     Emitter.on('connected', (name) => {
