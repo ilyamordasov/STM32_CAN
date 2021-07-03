@@ -243,6 +243,7 @@ class App extends React.Component {
      // if (data.name !== undefined) {
         newState.forEach((item) => { if (item.cmd === data) {item.value = data.value} })
         this.setState({metrics: newState})
+this.log(JSON.stringify(this.state))
     //  }
     });
   
