@@ -97,7 +97,7 @@ class App extends React.Component {
     }
 
     this.device = null
-    this.supportsBluetooth = true
+    this.supportsBluetooth = false
     this.isDisconnected = true
     this.cmd = null
     this.autoscroll = true
