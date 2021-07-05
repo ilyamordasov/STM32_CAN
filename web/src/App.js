@@ -5,6 +5,9 @@ import moment from 'moment'
 import { OBDReader } from './ble/obd';
 import Emitter from './emitter';
 
+import Highcharts from 'highcharts'
+import HighchartsReact from 'highcharts-react-official'
+
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -40,24 +43,67 @@ class App extends React.Component {
         {name: "egr errors", cmd: "egr_err", value: 0, m: '%'},
         {name: "distance", cmd: "mil_dist", value: 0, m: 'km'},
         {name: "pressure", cmd: "map", value: 0, m: 'kPa'},
-      ]
+      ],
+        chartOptions: {
+          chart: {
+            className: "custom-chart",
+            height: 140,
+          },
+          xAxis: {
+            allowDecimals: false,
+            gridLineWidth: 0,
+            interval: 1,
+            labels: {
+              enabled: false
+            },
+            minRange: 5,
+            visible: false,
+          },
+          yAxis: {
+            gridLineWidth: 0,
+            interval: 1,
+            labels: {
+              enabled: false
+            },
+            title: {
+              enabled: false
+            },
+          },
+          title: {
+            text: ''
+          },
+          series: [
+            {
+              name: 'rpm',
+              data: [],
+              color: "#4954E2",
+              marker: { enabled: false },
+            },
+            {
+              name: 'coolant',
+              data: [],
+              color: "#FFCC00",
+              marker: { enabled: false },
+            },
+            {
+              name: 'load',
+              data: [],
+              color: "#FB4903",
+              marker: { enabled: false },
+            },
+          ],
+        },
+        hoverData: null
     }
 
     this.device = null
-    this.supportsBluetooth = false
+    this.supportsBluetooth = true
     this.isDisconnected = true
     this.cmd = null
     this.autoscroll = true
     this.console = ""
 
     this.obd = new OBDReader()
-  }
-
-  /**
-   * Let the user know when their device has been disconnected.
-   */
-  onDisconnected = (event) => {
-    this.log(`The device ${event.target.name} is disconnected`);
   }
 
   scrollToBottom = () => {
@@ -69,7 +115,6 @@ class App extends React.Component {
   log = (data) => {
     var ts = "[ " + moment().format('HH:mm:ss') + " ]\t"
     console.log(data)
-    //this.setState({console : this.state.console + ts + JSON.stringify(data) + "\r\n"})
     this.console += (ts + JSON.stringify(data) + "\r\n")
     this.scrollToBottom()
   }
@@ -98,9 +143,21 @@ class App extends React.Component {
     })
 
     Emitter.on('dataReceived', (data) => {
+      this.log(data)
       var newState = this.state.metrics
       if (data.name !== undefined) {
-        newState.forEach((item) => { if (item.cmd === data.name) {item.value = data.value} })
+        let d = this.state.chartOptions.series
+        console.log(d)
+        if (data.name === "rpm") { d[0].data.push(Math.random() * 5) }
+        if (data.name === "temp") { d[1].data.push(Math.random() * 35) }
+        if (data.name === "load_pct") { d[2].data.push(Math.random() * 55) }
+        this.setState({
+          chartOptions: {
+            series: d
+          }
+        });
+
+        newState.forEach((item) => { if (item.cmd === data.name) {item.value = (item.cmd === "vpwr") ? data.value.toFixed(1) : Math.round(data.value) } })
         this.setState({metrics: newState})
       }
     });
@@ -133,7 +190,9 @@ class App extends React.Component {
     });
 
     this.obd.init()
-    //this.obd.test()
+    if (Array.from(new URLSearchParams(window.location.search)).length > 0) {
+      this.obd.test()
+    }
   }
 
   handleClose = () => this.setState({modal: false});
@@ -155,18 +214,24 @@ class App extends React.Component {
                     <Col md={2} xs={2} style={{textAlign: 'right'}}><Button variant="link" onClick={(e) => this.setState({modal: !this.state.modal})}>Logs</Button></Col>
                   </Row>
                   <Row>
-                    <Col style={{position: 'relative'}} key={(Math.random*999).toString()}><Row>
-                    {
-                      this.state.metrics.map((x, index) => {
-                        return <Col xs={4} md={4} key={"data" + index}><div className="item"><span>{x.name}</span><br/>{x.value.toLocaleString()} <sup>{x.m}</sup></div></Col>
-                      })
-                    }
-                    </Row></Col>
+                    <Col style={{position: 'relative'}} key={(Math.random*999).toString()}>
+                      <Row>
+                      {
+                        this.state.metrics.map((x, index) => {
+                          return <Col xs={4} md={4} key={"data" + index}><div className="item"><span>{x.name}</span><br/>{x.value.toLocaleString()} <sup>{x.m}</sup></div></Col>
+                        })
+                      }
+                      </Row>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col>
+                      <HighchartsReact className="custom-chart" highcharts={Highcharts} options={this.state.chartOptions} ref={chart => this.chart = chart}/>
+                    </Col>
                   </Row>
                 </>
               : <div style={{textAlign: 'center'}}><BLEOff className='bleoff' style={{width: window.screen.width-160 +'px', height: window.screen.width-160 +'px'}}/><p>This browser doesn't support the Web Bluetooth API</p></div>
               }
-              
             </Col>
           </Row>
           <Row>
@@ -191,7 +256,7 @@ class App extends React.Component {
           </Modal.Body>
           <Modal.Footer>
             {
-              navigator.canShare ? <Button variant="primary" style={{width: 'inherit'}} size="lg" onClick={this.shareLogs} block>Save</Button> : null
+              navigator.canShare ? <Button variant="primary" style={{width: 'inherit'}} size="lg" onClick={this.shareLogs} block>Share</Button> : null
             }
           </Modal.Footer>
         </Modal>

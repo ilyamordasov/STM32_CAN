@@ -266,14 +266,15 @@ export class OBDReader {
     var testInterval = setInterval(() => {
       var reply;
       var t = ["vpwr", "rpm", "vss", "temp", "load_pct", "egr_err", "mil_dist", "map"]
-      var name = t[Math.floor(Math.random()*t.length)];
-      reply = {pid: 999, name: name, value: Math.floor(Math.random() * 999), mode: 1}
-      Emitter.emit('dataReceived', reply)
-      if (++count > 10) {
+      reply = t.map(item => { return {pid: 999, name: item, value: Math.floor(Math.random() * 999), mode: 1} })
+      for (var i of reply) {
+        Emitter.emit('dataReceived', i)
+      }
+      if (++count > 50) {
         console.log("clearOnterval")
         clearInterval(testInterval)
         count = 0
       }
-    }, 500);
+    }, 1000);
   }
 }

@@ -83,5 +83,11 @@ export const GlobalStyles = createGlobalStyle`
     font-size: 12px;
     font-weight: 400;
   }
+
+  .custom-chart chart{
+    margin: 10px 0px 50px 0px;
+    backgroundColor: "#000",
+    color: "#fff"
+  }
 }
 `;
