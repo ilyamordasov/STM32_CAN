@@ -90,10 +90,26 @@ export const GlobalStyles = createGlobalStyle`
   }
 
   .indicator {
-    width: 8px;
-    height: 8px;
-    border-radius: 100px;
-    background-color: #ff0000;
+    color: ${({ theme }) => theme.text};
   }
+  @media (min-width:320px)  {
+    .indicator:before {
+      font-size: 10px;
+    }
+  }
+  @media (min-width:900px) {
+    .indicator:before {
+      font-size: 16px;
+    }
+  }
+  .indicator:before {
+    content: "●";
+    margin-right: 4px;
+    color: #4954E2;
+  }
+
+  .blue:before { color: #4954E2; }
+  .red:before { color: #F90AC4; }
+  .magenda:before { color: #0AF9F9; }
 }
 `;

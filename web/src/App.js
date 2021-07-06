@@ -34,10 +34,10 @@ class App extends React.Component {
 
       metrics: [
         {name: "battery", cmd: "vpwr", value: 0, m: 'v'},
-        {name: "rpm", cmd: "rpm", value: 0, m: '', color: '#0AF9F9'},
+        {name: "rpm", cmd: "rpm", value: 0, m: ''},
         {name: "speed", cmd: "vss", value: 0, m: 'km/h'},
-        {name: "coolant", cmd: "temp", value: 0, m: '°', color: '#F90AC4'},
-        {name: "load", cmd: "load_pct", value: 0, m: '%', color: '#4954E2'},
+        {name: "coolant", cmd: "temp", value: 0, m: '°'},
+        {name: "load", cmd: "load_pct", value: 0, m: '%'},
         // {name: "dtc errors", cmd: "", value: 0, m: ''},
         {name: "egr errors", cmd: "egr_err", value: 0, m: '%'},
         {name: "distance", cmd: "mil_dist", value: 0, m: 'km'},
@@ -94,7 +94,7 @@ class App extends React.Component {
     Emitter.on('dataReceived', (data) => {
       var newState = this.state.metrics
       if (data.name !== undefined) {
-        if (data.name === "rpm" || data.name === "temp" || data.name === "load_pct") {
+        if ((data.name === "rpm" || data.name === "temp" || data.name === "load_pct") && this.supportsBluetooth) {
           this.chart.updatePlot(data.name, Math.round(data.value))
         }
 
@@ -159,7 +159,14 @@ class App extends React.Component {
                       <Row>
                       {
                         this.state.metrics.map((x, index) => {
-                          return <Col xs={4} md={4} key={"data" + index}><div className="item"><span style={{ color: (x.name === "rpm" || x.name === "coolant" || x.name === "load" ? x.color : "null") }}>{x.name}</span><br/>{x.value.toLocaleString()} <sup>{x.m}</sup></div></Col>
+                          var cl;
+                          switch(x.name) {
+                            case "rpm": cl = "indicator magenda"; break
+                            case "coolant": cl = "indicator red"; break
+                            case "load": cl = "indicator blue"; break
+                            default: cl = ""; break
+                          }
+                          return <Col xs={4} md={4} key={"data" + index}><div className="item"><span className={cl}>{x.name}</span><br/>{x.value.toLocaleString()} <sup>{x.m}</sup></div></Col>
                         })
                       }
                       </Row>

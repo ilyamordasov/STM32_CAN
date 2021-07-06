@@ -14,7 +14,6 @@ export default class Chart extends React.Component {
   }
 
   scale = (value, in_min = 0, in_max = 1000, out_min = 0, out_max = this.canvas.height) => {
-      console.log(in_max)
       return Math.round((value - in_min) * (out_max - out_min) / (in_max - in_min) + out_min)
   }
 
@@ -22,19 +21,14 @@ export default class Chart extends React.Component {
     let ctx = this.canvas.getContext('2d')
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     var a = [this.rpm, this.coolant, this.load]
-    var j;
     for (var item of a) {
         ctx.lineWidth = 2
         ctx.beginPath()
         ctx.strokeStyle = (item === this.rpm ? "#0AF9F9" : (item === this.coolant ? "#F90AC4" : "#4954E2"))
-        j = 1
-
-        item.reduce(function(pValue, cValue) {
-            //console.log(`pX: ${this.step * (j-1)}, pY: ${this.scale(pValue)}, cX: ${this.step * j}, cY: ${this.scale(cValue)}`)
-            ctx.moveTo(this.step * (j-1), this.canvas.height - pValue)
-            ctx.lineTo(this.step * j, this.canvas.height - cValue)
-            j += 1
-
+        
+        item.reduce(function (pValue, cValue, index) {
+            ctx.moveTo(this.step * (index === 0 ? 0 : (index-1)), this.canvas.height - pValue)
+            ctx.lineTo(this.step * index, this.canvas.height - cValue)
             return cValue
         }.bind(this));
         ctx.stroke()
@@ -43,7 +37,6 @@ export default class Chart extends React.Component {
 
   updatePlot = (key, data) => {
     var d, min, max;
-    console.log(d)
     switch (key) {
         case "rpm":
             d = this.rpm
