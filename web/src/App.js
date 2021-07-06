@@ -5,8 +5,7 @@ import moment from 'moment'
 import { OBDReader } from './ble/obd';
 import Emitter from './emitter';
 
-import Highcharts from 'highcharts'
-import HighchartsReact from 'highcharts-react-official'
+import Chart from './chart'
 
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -35,65 +34,15 @@ class App extends React.Component {
 
       metrics: [
         {name: "battery", cmd: "vpwr", value: 0, m: 'v'},
-        {name: "rpm", cmd: "rpm", value: 0, m: ''},
+        {name: "rpm", cmd: "rpm", value: 0, m: '', color: '#0AF9F9'},
         {name: "speed", cmd: "vss", value: 0, m: 'km/h'},
-        {name: "coolant", cmd: "temp", value: 0, m: '°'},
-        {name: "load", cmd: "load_pct", value: 0, m: '%'},
+        {name: "coolant", cmd: "temp", value: 0, m: '°', color: '#F90AC4'},
+        {name: "load", cmd: "load_pct", value: 0, m: '%', color: '#4954E2'},
         // {name: "dtc errors", cmd: "", value: 0, m: ''},
         {name: "egr errors", cmd: "egr_err", value: 0, m: '%'},
         {name: "distance", cmd: "mil_dist", value: 0, m: 'km'},
         {name: "pressure", cmd: "map", value: 0, m: 'kPa'},
       ],
-        chartOptions: {
-          chart: {
-            className: "custom-chart",
-            height: 140,
-          },
-          xAxis: {
-            allowDecimals: false,
-            gridLineWidth: 0,
-            interval: 1,
-            labels: {
-              enabled: false
-            },
-            minRange: 5,
-            visible: false,
-          },
-          yAxis: {
-            gridLineWidth: 0,
-            interval: 1,
-            labels: {
-              enabled: false
-            },
-            title: {
-              enabled: false
-            },
-          },
-          title: {
-            text: ''
-          },
-          series: [
-            {
-              name: 'rpm',
-              data: [],
-              color: "#4954E2",
-              marker: { enabled: false },
-            },
-            {
-              name: 'coolant',
-              data: [],
-              color: "#FFCC00",
-              marker: { enabled: false },
-            },
-            {
-              name: 'load',
-              data: [],
-              color: "#FB4903",
-              marker: { enabled: false },
-            },
-          ],
-        },
-        hoverData: null
     }
 
     this.device = null
@@ -143,19 +92,11 @@ class App extends React.Component {
     })
 
     Emitter.on('dataReceived', (data) => {
-      this.log(data)
       var newState = this.state.metrics
       if (data.name !== undefined) {
-        let d = this.state.chartOptions.series
-        console.log(d)
-        if (data.name === "rpm") { d[0].data.push(Math.random() * 5) }
-        if (data.name === "temp") { d[1].data.push(Math.random() * 35) }
-        if (data.name === "load_pct") { d[2].data.push(Math.random() * 55) }
-        this.setState({
-          chartOptions: {
-            series: d
-          }
-        });
+        if (data.name === "rpm" || data.name === "temp" || data.name === "load_pct") {
+          this.chart.updatePlot(data.name, Math.round(data.value))
+        }
 
         newState.forEach((item) => { if (item.cmd === data.name) {item.value = (item.cmd === "vpwr") ? data.value.toFixed(1) : Math.round(data.value) } })
         this.setState({metrics: newState})
@@ -218,15 +159,15 @@ class App extends React.Component {
                       <Row>
                       {
                         this.state.metrics.map((x, index) => {
-                          return <Col xs={4} md={4} key={"data" + index}><div className="item"><span>{x.name}</span><br/>{x.value.toLocaleString()} <sup>{x.m}</sup></div></Col>
+                          return <Col xs={4} md={4} key={"data" + index}><div className="item"><span style={{ color: (x.name === "rpm" || x.name === "coolant" || x.name === "load" ? x.color : "null") }}>{x.name}</span><br/>{x.value.toLocaleString()} <sup>{x.m}</sup></div></Col>
                         })
                       }
                       </Row>
                     </Col>
                   </Row>
                   <Row>
-                    <Col>
-                      <HighchartsReact className="custom-chart" highcharts={Highcharts} options={this.state.chartOptions} ref={chart => this.chart = chart}/>
+                    <Col style={{width: '100vw'}}>
+                      <Chart ref={chart => this.chart = chart}/>
                     </Col>
                   </Row>
                 </>

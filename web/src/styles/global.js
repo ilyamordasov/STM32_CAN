@@ -84,10 +84,16 @@ export const GlobalStyles = createGlobalStyle`
     font-weight: 400;
   }
 
-  .custom-chart chart{
-    margin: 10px 0px 50px 0px;
-    backgroundColor: "#000",
-    color: "#fff"
+  canvas {
+    background-color: ${({ theme }) => theme.body};
+    height: 140px;
+  }
+
+  .indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 100px;
+    background-color: #ff0000;
   }
 }
 `;
