@@ -38,15 +38,15 @@ class App extends React.Component {
         {name: "speed", cmd: "vss", value: 0, m: 'km/h'},
         {name: "coolant", cmd: "temp", value: 0, m: '°'},
         {name: "load", cmd: "load_pct", value: 0, m: '%'},
-        // {name: "dtc errors", cmd: "", value: 0, m: ''},
         {name: "egr errors", cmd: "egr_err", value: 0, m: '%'},
         {name: "distance", cmd: "mil_dist", value: 0, m: 'km'},
         {name: "pressure", cmd: "map", value: 0, m: 'kPa'},
+        {name: "dtc errors", cmd: "dtc_cnt", value: 0, m: ''},
       ],
     }
 
     this.device = null
-    this.supportsBluetooth = false
+    this.supportsBluetooth = true
     this.isDisconnected = true
     this.cmd = null
     this.autoscroll = true
@@ -117,6 +117,7 @@ class App extends React.Component {
         this.obd.addPoller("mil_dist")
         this.obd.addPoller("egr_err")
         this.obd.addPoller("vpwr")
+        this.obd.addPoller("dtc_cnt")
     
         this.obd.startPolling(1500)
     });
