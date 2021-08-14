@@ -190,7 +190,7 @@ class App extends React.Component {
               }
             </Col>
           </Row>
-          <Row>
+          <Row style={{position:"absolute", bottom:"20px"}}>
             <Col>
               <>
               { 
