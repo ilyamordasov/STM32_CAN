@@ -31,6 +31,7 @@ class App extends React.Component {
       theme: 'light',
       modal: false,
       device_name: '',
+      vin: '',
 
       metrics: [
         {name: "battery", cmd: "vpwr", value: 0, m: 'v'},
@@ -39,9 +40,10 @@ class App extends React.Component {
         {name: "coolant", cmd: "temp", value: 0, m: '°'},
         {name: "load", cmd: "load_pct", value: 0, m: '%'},
         {name: "egr errors", cmd: "egr_err", value: 0, m: '%'},
-        {name: "distance", cmd: "mil_dist", value: 0, m: 'km'},
-        {name: "pressure", cmd: "map", value: 0, m: 'kPa'},
-        {name: "dtc errors", cmd: "dtc_cnt", value: 0, m: ''},
+        {name: "distance", cmd: "clr_dist", value: 0, m: 'km'},
+        {name: "time", cmd: "runtm", value: 0, m: 'sec'},
+        {name: "fuel level", cmd: "fli", value: 0, m: ''},
+        {name: "odometer", cmd: "odo", value: 0, m: 'km'},
       ],
     }
 
@@ -97,6 +99,7 @@ class App extends React.Component {
         if ((data.name === "rpm" || data.name === "temp" || data.name === "load_pct") && this.supportsBluetooth) {
           this.chart.updatePlot(data.name, Math.round(data.value))
         }
+        else if ((data.name === "vin") && this.supportsBluetooth) {this.setState({vin: data.value})}
 
         newState.forEach((item) => { if (item.cmd === data.name) {item.value = (item.cmd === "vpwr") ? data.value.toFixed(1) : Math.round(data.value) } })
         this.setState({metrics: newState})
@@ -109,15 +112,18 @@ class App extends React.Component {
 
         this.obd.requestValueByName("vin")
 
-        this.obd.addPoller("vss")
-        this.obd.addPoller("rpm")
-        this.obd.addPoller("temp")
-        this.obd.addPoller("load_pct")
-        this.obd.addPoller("map")
-        this.obd.addPoller("mil_dist")
-        this.obd.addPoller("egr_err")
-        this.obd.addPoller("vpwr")
-        this.obd.addPoller("dtc_cnt")
+        // this.obd.addPoller("vss")
+        // this.obd.addPoller("rpm")
+        // this.obd.addPoller("temp")
+        // this.obd.addPoller("load_pct")
+        // this.obd.addPoller("map")
+        // this.obd.addPoller("mil_dist")
+        // this.obd.addPoller("egr_err")
+        // this.obd.addPoller("vpwr")
+        // this.obd.addPoller("dtc_cnt")
+        for (var pid of this.state.metrics) {
+          this.obd.addPoller(pid.cmd)
+        }
     
         this.obd.startPolling(1500)
     });
@@ -154,6 +160,7 @@ class App extends React.Component {
                   <Row style={{marginBottom: 80}}>
                     <Col md={10} xs={10}>{this.state.status === 0 ? <><BLEOn className="svg"/> Disconneted</> : <><BLEConnected className="svg"/> {this.state.device_name}</>}</Col>
                     <Col md={2} xs={2} style={{textAlign: 'right'}}><Button variant="link" onClick={(e) => this.setState({modal: !this.state.modal})}>Logs</Button></Col>
+                    <Col>VIN: {this.state.vin}</Col>
                   </Row>
                   <Row>
                     <Col style={{position: 'relative'}} key={(Math.random*999).toString()}>

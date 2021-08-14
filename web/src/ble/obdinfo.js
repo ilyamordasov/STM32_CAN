@@ -237,6 +237,10 @@ function convertEngineTorque(byte){
 function convertExhastGasTemperature(byteA, byteB){
     return (parseInt(byteA, 16) * 256 + parseInt(byteB, 16)) / 10 - 40;
 }
+
+function convertOdometer(byteA, byteB, byteC, byteD) {
+    return (parseInt(byteA, 16) * 16777216 + parseInt(byteB, 16) * 65536 + parseInt(byteC, 16) * 256 + parseInt(byteD, 16)) / 10;
+}
 //DTC
 function notSupported() {
    console.log("There is no answer. This should not be happening.");
@@ -375,6 +379,7 @@ var responsePIDS = [
     {mode: modeRealTime, pid: "6E", bytes: 5, name: "ipct",         description: "Injection pressure control system", min: -40, max: 215, unit: "Celsius"},
     {mode: modeRealTime, pid: "73", bytes: 5, name: "ep",           description: "Exhaust pressure", min: -40, max: 215, unit: "Celsius"},
     {mode: modeRealTime, pid: "78", bytes: 9, name: "egt",          description: "Exhaust Gas temperature Bank 1", min: -40, max: 215, unit: "Celsius", convertToUseful: convertExhastGasTemperature},
+    {mode: modeRealTime, pid: "A6", bytes: 4, name: "odo",          description: "Odometer", min: 0, max: 429496729.5, unit: "km", convertToUseful: convertOdometer},
 
 
 

@@ -1,0 +1,82 @@
+ATZ
+ATE0
+ATM0
+ATL0
+ATST62
+ATS0
+AT@1
+ATI
+ATH0
+ATAT1
+ATDPN
+ATSP0
+0100
+ATH1
+0120
+0140
+010C
+0105
+010F
+010B
+0110
+010D
+0146
+012D
+015C
+0131
+011F
+221172
+AT SH DB18F1
+AT SH DB33F1
+221310
+22099F
+2216C1
+012F
+0124
+0134
+0143
+0104
+0114
+0115
+0116
+0117
+0118
+0119
+011A
+011B
+0125
+ATSP7
+
+-----------------------------------------------------------
+Check whats pids are supported
+0100    
+0120    
+0140   
+
+// PIDs
+010C    Engine speed                                rpm                             +
+0105    Engine coolant temperature                  °C                              +
+010F    Intake air temperature                      °C
+010B    Intake manifold absolute pressure           kPa
+0110    Mass air flow sensor (MAF) air flow rate    grams/sec
+010D    Vehicle speed                               km/h                            +
+0146    Ambient air temperature                     °C
+012D    EGR Error                                   %                               +
+015C    Engine oil temperature                      °C
+0131    Distance traveled since codes cleared       km                              +
+011F    Run time since engine start                 seconds                         +
+012F    Fuel Tank Level Input                       %                               +
+0124    (!!!!)Oxygen Sensor 1                       ratio V
+0134    (!!!!)Oxygen Sensor 1                       ratio mA
+0143    Absolute load value                         %                               
+0104    Calculated engine load                      %                               +
+0114    (!!!!)
+0115    (!!!!)
+0116    (!!!!)
+0117    (!!!!)
+0118    (!!!!)
+0119    (!!!!)
+011A    (!!!!)
+011B    (!!!!)
+0125    (!!!!)
+01A6    Odometer                                    km                              +
