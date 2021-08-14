@@ -32,6 +32,7 @@ class App extends React.Component {
       modal: false,
       device_name: '',
       vin: '',
+      dtc: '',
 
       metrics: [
         {name: "battery", cmd: "vpwr", value: 0, m: 'v'},
@@ -45,11 +46,13 @@ class App extends React.Component {
         {name: "fuel level", cmd: "fli", value: 0, m: ''},
         {name: "odometer", cmd: "odo", value: 0, m: 'km'},
         {name: "fuel rate", cmd: "enginefrate", value: 0, m: 'L/h'},
+        {name: "fuel rate (calc)", cmd: "maf", value: 0, m: 'L/100km'},
+        {name: "dtc", cmd: "requestdtc", value: 0, m: ''},
       ],
     }
 
     this.device = null
-    this.supportsBluetooth = true
+    this.supportsBluetooth = false
     this.isDisconnected = true
     this.cmd = null
     this.autoscroll = true
@@ -101,8 +104,19 @@ class App extends React.Component {
           this.chart.updatePlot(data.name, Math.round(data.value))
         }
         else if ((data.name === "vin") && this.supportsBluetooth) {this.setState({vin: data.value})}
+        else if ((data.name === "dtc") && this.supportsBluetooth) {this.setState({dtc: data.value})}
 
-        newState.forEach((item) => { if (item.cmd === data.name) {item.value = (item.cmd === "vpwr") ? data.value.toFixed(1) : Math.round(data.value) } })
+        newState.forEach((item) => { 
+          if (item.cmd === data.name) {item.value = (item.cmd === "vpwr") ? data.value.toFixed(1) : Math.round(data.value) }
+          if (item.cmd === "maf") { 
+            /*
+              l/100km = 235.214583 / MPG
+              MPG = 710.7 * VSS / MAF
+            */
+            var vss = newState.find(x => x.cmd === "vss").value
+            item.value = vss === 0 ? item.value : (0.330961845 * item.value / vss).toFixed(1)
+          }
+        })
         this.setState({metrics: newState})
       }
     });
@@ -162,6 +176,7 @@ class App extends React.Component {
                     <Col md={10} xs={10}>{this.state.status === 0 ? <><BLEOn className="svg"/> Disconneted</> : <><BLEConnected className="svg"/> {this.state.device_name}</>}</Col>
                     <Col md={2} xs={2} style={{textAlign: 'right'}}><Button variant="link" onClick={(e) => this.setState({modal: !this.state.modal})}>Logs</Button></Col>
                     <Col>VIN: {this.state.vin}</Col>
+                    <Col>DTC: {this.state.dtc}</Col>
                   </Row>
                   <Row>
                     <Col style={{position: 'relative'}} key={(Math.random*999).toString()}>
@@ -175,7 +190,8 @@ class App extends React.Component {
                             case "load": cl = "indicator blue"; break
                             default: cl = ""; break
                           }
-                          return <Col xs={4} md={4} key={"data" + index}><div className="item"><span className={cl}>{x.name}</span><br/>{x.value.toLocaleString()} <sup>{x.m}</sup></div></Col>
+                          if (x.name !== "dtc") { return <Col xs={4} md={4} key={"data" + index}><div className="item"><span className={cl}>{x.name}</span><br/>{x.value.toLocaleString()} <sup>{x.m}</sup></div></Col> }
+                          else return null
                         })
                       }
                       </Row>
