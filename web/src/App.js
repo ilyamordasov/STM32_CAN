@@ -44,6 +44,7 @@ class App extends React.Component {
         {name: "time", cmd: "runtm", value: 0, m: 'sec'},
         {name: "fuel level", cmd: "fli", value: 0, m: ''},
         {name: "odometer", cmd: "odo", value: 0, m: 'km'},
+        {name: "fuel rate", cmd: "enginefrate", value: 0, m: 'L/h'},
       ],
     }
 
