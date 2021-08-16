@@ -269,13 +269,13 @@ export class OBDReader {
     var count = 0;
     var testInterval = setInterval(() => {
       var reply;
-      var t = ["vpwr", "rpm", "vss", "temp", "load_pct", "egr_err", "mil_dist", "map"]
+      var t = ["vpwr", "rpm", "vss", "temp", "load_pct", "egr_err", "mil_dist", "map", "clr_dist", "runtm", "fli", "odo", "enginefrate", "dtc_cnt", "maf"]
       reply = t.map(item => {
         var r;
         if (item === "rpm" || item === "temp" || item === "load_pct")
           r = {pid: 999, name: item, value: (item === "rpm" ? this.rand(0, 16383.75) : (item === "temp" ? this.rand(-40, 215) : this.rand(0, 100))), mode: 1}
         else
-          r = t.map(item => { return {pid: 999, name: item, value: this.rand(0, 100), mode: 1} })
+          r = {pid: 999, name: item, value: this.rand(0, 100), mode: 1}
         return r
       })
       

@@ -46,17 +46,18 @@ class App extends React.Component {
         {name: "fuel level", cmd: "fli", value: 0, m: ''},
         {name: "odometer", cmd: "odo", value: 0, m: 'km'},
         {name: "fuel rate", cmd: "enginefrate", value: 0, m: 'L/h'},
-        {name: "fuel rate (calc)", cmd: "maf", value: 0, m: 'L/100km'},
-        {name: "dtc", cmd: "requestdtc", value: 0, m: ''},
+        {name: "frate (calc)", cmd: "maf", value: 0, m: 'L/100km'},
+        {name: "dtc count", cmd: "dtc_cnt", value: 0, m: ''},
+        {name: "MIL distance", cmd: "mil_dist", value: 0, m: 'km'},
       ],
     }
 
+    this.console = ''
     this.device = null
     this.supportsBluetooth = false
     this.isDisconnected = true
     this.cmd = null
     this.autoscroll = true
-    this.console = ""
 
     this.obd = new OBDReader()
   }
@@ -69,7 +70,7 @@ class App extends React.Component {
 
   log = (data) => {
     var ts = "[ " + moment().format('HH:mm:ss') + " ]\t"
-    console.log(data)
+    console.log(ts + JSON.stringify(data))
     this.console += (ts + JSON.stringify(data) + "\r\n")
     this.scrollToBottom()
   }
@@ -103,9 +104,10 @@ class App extends React.Component {
     })
 
     Emitter.on('dataReceived', (data) => {
+      this.log(data)
       var newState = this.state.metrics
       if (data.name !== undefined) {
-        if ((data.name === "rpm" || data.name === "temp" || data.name === "load_pct") && this.supportsBluetooth) {
+        if ((data.name === "rpm" || data.name === "temp" || data.name === "load_pct") && this.supportsBluetooth && this.chart) {
           this.chart.updatePlot(data.name, Math.round(data.value))
         }
         else if ((data.name === "vin") && this.supportsBluetooth) {this.setState({vin: data.value})}
@@ -132,15 +134,6 @@ class App extends React.Component {
 
         this.obd.requestValueByName("vin")
 
-        // this.obd.addPoller("vss")
-        // this.obd.addPoller("rpm")
-        // this.obd.addPoller("temp")
-        // this.obd.addPoller("load_pct")
-        // this.obd.addPoller("map")
-        // this.obd.addPoller("mil_dist")
-        // this.obd.addPoller("egr_err")
-        // this.obd.addPoller("vpwr")
-        // this.obd.addPoller("dtc_cnt")
         for (var pid of this.state.metrics) {
           this.obd.addPoller(pid.cmd)
         }
@@ -177,30 +170,28 @@ class App extends React.Component {
               {
               this.supportsBluetooth
               ? <>
-                  <Row style={{marginBottom: 80}}>
-                    <Col md={10} xs={10}>{this.state.status === 0 ? <><BLEOn className="svg"/> Disconneted</> : <><BLEConnected className="svg"/> {this.state.device_name}</>}</Col>
+                  <Row style={{marginBottom: 40}}>
+                    <Col md={10} xs={10}>{this.state.status === 0 ? <div onClick={this.obd.connect}><BLEOn className="svg"/> Disconneted</div> : <div onClick={this.obd.disconnect}><BLEConnected className="svg"/> {this.state.device_name}</div>}</Col>
                     <Col md={2} xs={2} style={{textAlign: 'right'}}><Button variant="link" onClick={(e) => this.setState({modal: !this.state.modal})}>Logs</Button></Col>
-                    <Col>VIN: {this.state.vin}</Col>
-                    <Col>DTC: {this.state.dtc}</Col>
+                    {/* <Col>VIN: {this.state.vin}</Col>
+                    <Col>DTC: {this.state.dtc}</Col> */}
                   </Row>
                   <Row>
                     <Col style={{position: 'relative'}} key={(Math.random*999).toString()}>
                       <Row>
                       {
                         this.state.metrics.map((x, index) => {
-                          var cl;
-                          var val = x.value.toLocaleString()
+                          var cl
+                          var val = x.name === 'time' ? this.secToTime(x.value) : x.value.toLocaleString()
                           switch(x.name) {
                             case "rpm": cl = "indicator magenda"; break
                             case "coolant": cl = "indicator red"; break
                             case "load": cl = "indicator blue"; break
                             default: cl = ""; break
                           }
-                          if (x.name !== "dtc") { 
-                            if (x.name === "time") { val = this.secToTime(x.value) }
-                            return <Col xs={4} md={4} key={"data" + index}><div className="item"><span className={cl}>{x.name}</span><br/>{val} <sup>{x.m}</sup></div></Col>
-                          }
-                          else return null
+                          // if (x.name !== "dtc") { return <Col xs={4} md={4} key={"data" + index}><div className="item"><span className={cl}>{x.name}</span><br/>{val} <sup>{x.m}</sup></div></Col> }
+                          // else return null
+                          return <Col xs={4} md={4} key={"data" + index}><div className="item"><span className={cl}>{x.name}</span><br/>{val} <sup>{x.m}</sup></div></Col>
                         })
                       }
                       </Row>
@@ -216,7 +207,7 @@ class App extends React.Component {
               }
             </Col>
           </Row>
-          <Row style={{position:"absolute", bottom:"20px"}}>
+          {/* <Row style={{position:"absolute", bottom:"20px"}}>
             <Col>
               <>
               { 
@@ -226,15 +217,15 @@ class App extends React.Component {
               }
               </>
             </Col>
-          </Row>
+          </Row> */}
         </Container>
-        <Modal show={this.state.modal} onHide={this.handleClose}>
+        <Modal show={this.state.modal} onHide={this.handleClose} animation={false}>
           <Modal.Header closeButton>
-            <Modal.Title>Logs</Modal.Title>
+            <Modal.Title style={{color: '#000'}}>Logs</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <textarea value={this.console} ref={textLog => this.textLog = textLog}/>
-            <Form.Check type="checkbox" id="autoscroll" label="Autoscroll" onChange={this.cb_obChange} checked={this.autoscroll}/>
+            <textarea defaultValue={this.console} ref={textLog => this.textLog = textLog} disabled/>
+            <Form.Check type="checkbox" id="autoscroll" label="Autoscroll" style={{color: '#000'}} onChange={this.cb_obChange} checked={this.autoscroll}/>
           </Modal.Body>
           <Modal.Footer>
             {

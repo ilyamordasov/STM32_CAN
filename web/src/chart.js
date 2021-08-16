@@ -106,7 +106,7 @@ export default class Chart extends React.Component {
         // d.forEach(x => {
         //     x.x = x.x - this.step
         // })
-        console.log(d)
+        //console.log(d)
         //d.push({x: this.step*(d.length-1), y: this.scale(data, min, max)})
         d.push(this.scale(data, min, max))
 
