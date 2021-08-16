@@ -42,7 +42,7 @@ class App extends React.Component {
         {name: "load", cmd: "load_pct", value: 0, m: '%'},
         {name: "egr errors", cmd: "egr_err", value: 0, m: '%'},
         {name: "distance", cmd: "clr_dist", value: 0, m: 'km'},
-        {name: "time", cmd: "runtm", value: 0, m: 'sec'},
+        {name: "time", cmd: "runtm", value: 0, m: ''},
         {name: "fuel level", cmd: "fli", value: 0, m: ''},
         {name: "odometer", cmd: "odo", value: 0, m: 'km'},
         {name: "fuel rate", cmd: "enginefrate", value: 0, m: 'L/h'},
@@ -84,6 +84,11 @@ class App extends React.Component {
       alert('Error: ' + err)
     }
   }
+  
+  secToTime = (num) => {
+    let f =  num > 60 ? (num > 3600 ? 'HH:mm:ss' : 'mm:ss') : 'mm:ss'
+    return moment().startOf('day').seconds(num).format(f)
+  }
 
   componentDidMount() {
     if (typeof window !== 'undefined') {
@@ -107,8 +112,8 @@ class App extends React.Component {
         else if ((data.name === "dtc") && this.supportsBluetooth) {this.setState({dtc: data.value})}
 
         newState.forEach((item) => { 
-          if (item.cmd === data.name) {item.value = (item.cmd === "vpwr") ? data.value.toFixed(1) : Math.round(data.value) }
-          if (item.cmd === "maf") { 
+          if (item.cmd === data.name) { item.value = (item.cmd === "vpwr") ? data.value.toFixed(1) : Math.round(data.value) }
+          else if (item.cmd === "maf") { 
             /*
               l/100km = 235.214583 / MPG
               MPG = 710.7 * VSS / MAF
@@ -184,13 +189,17 @@ class App extends React.Component {
                       {
                         this.state.metrics.map((x, index) => {
                           var cl;
+                          var val = x.value.toLocaleString()
                           switch(x.name) {
                             case "rpm": cl = "indicator magenda"; break
                             case "coolant": cl = "indicator red"; break
                             case "load": cl = "indicator blue"; break
                             default: cl = ""; break
                           }
-                          if (x.name !== "dtc") { return <Col xs={4} md={4} key={"data" + index}><div className="item"><span className={cl}>{x.name}</span><br/>{x.value.toLocaleString()} <sup>{x.m}</sup></div></Col> }
+                          if (x.name !== "dtc") { 
+                            if (x.name === "time") { val = this.secToTime(x.value) }
+                            return <Col xs={4} md={4} key={"data" + index}><div className="item"><span className={cl}>{val}</span><br/>{} <sup>{x.m}</sup></div></Col>
+                          }
                           else return null
                         })
                       }
