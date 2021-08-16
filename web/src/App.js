@@ -198,7 +198,7 @@ class App extends React.Component {
                           }
                           if (x.name !== "dtc") { 
                             if (x.name === "time") { val = this.secToTime(x.value) }
-                            return <Col xs={4} md={4} key={"data" + index}><div className="item"><span className={cl}>{val}</span><br/>{} <sup>{x.m}</sup></div></Col>
+                            return <Col xs={4} md={4} key={"data" + index}><div className="item"><span className={cl}>{x.name}</span><br/>{val} <sup>{x.m}</sup></div></Col>
                           }
                           else return null
                         })
